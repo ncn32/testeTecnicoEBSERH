@@ -14,9 +14,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,6 +42,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.gov.ebserh.pacientes.dto.HistoricoDTO;
+import br.gov.ebserh.pacientes.dto.PacienteDTO;
 import br.gov.ebserh.pacientes.service.PacientesService;
 
 
@@ -222,6 +225,105 @@ public class PacientesController {
 	}
 		
 	
+	// ---------------------------------- CRUD PACIENTES ------------------------------------------
+
+	@GET
+	@Path("/api/v1/pacientes")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Lista todos os pacientes", description = "")
+	public Response listarPacientes() {
+		log.info("### [INICIO] EBSERH PACIENTES listarPacientes() ###");
+		List<PacienteDTO> lstPacientes = pacientesService.listar();
+		log.info("### [FIM   ] EBSERH PACIENTES listarPacientes() ###");
+		return Response.status(200).entity(lstPacientes).build();
+	}
+
+	@GET
+	@Path("/api/v1/pacientes/{id}")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Busca um paciente pelo id", description = "")
+	public Response buscarPaciente(@PathParam("id") long id) {
+		log.info("### [INICIO] EBSERH PACIENTES buscarPaciente(" + id + ") ###");
+		PacienteDTO paciente = pacientesService.buscarPorId(id);
+		log.info("### [FIM   ] EBSERH PACIENTES buscarPaciente() ###");
+		if (paciente == null)
+			return Response.status(Status.NOT_FOUND).entity("PACIENTE NAO ENCONTRADO").build();
+		return Response.status(200).entity(paciente).build();
+	}
+
+	@POST
+	@Path("/api/v1/pacientes")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Cadastra um novo paciente", description = "")
+	public Response inserirPaciente(PacienteDTO paciente) {
+		log.info("### [INICIO] EBSERH PACIENTES inserirPaciente() ###");
+		boolean ret = pacientesService.inserir(paciente);
+		log.info("### [FIM   ] EBSERH PACIENTES inserirPaciente() ###");
+		if (ret)
+			return Response.status(Status.CREATED).entity("SUCESSO").build();
+		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
+	}
+
+	@PUT
+	@Path("/api/v1/pacientes/{id}")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Atualiza um paciente existente", description = "")
+	public Response atualizarPaciente(@PathParam("id") long id, PacienteDTO paciente) {
+		log.info("### [INICIO] EBSERH PACIENTES atualizarPaciente(" + id + ") ###");
+		paciente.setId(id);
+		boolean ret = pacientesService.atualizar(paciente);
+		log.info("### [FIM   ] EBSERH PACIENTES atualizarPaciente() ###");
+		if (ret)
+			return Response.status(200).entity("SUCESSO").build();
+		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
+	}
+
+	@DELETE
+	@Path("/api/v1/pacientes/{id}")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Exclui um paciente pelo id", description = "")
+	public Response excluirPaciente(@PathParam("id") long id) {
+		log.info("### [INICIO] EBSERH PACIENTES excluirPaciente(" + id + ") ###");
+		boolean ret = pacientesService.excluir(id);
+		log.info("### [FIM   ] EBSERH PACIENTES excluirPaciente() ###");
+		if (ret)
+			return Response.status(200).entity("SUCESSO").build();
+		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
+	}
+
+	// ---------------------------------- HISTORICO ------------------------------------------
+
+	@GET
+	@Path("/api/v1/historico")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Lista todo o historico", description = "")
+	public Response listarHistorico() {
+		log.info("### [INICIO] EBSERH PACIENTES listarHistorico() ###");
+		List<HistoricoDTO> lstHistorico = pacientesService.listarHistorico();
+		log.info("### [FIM   ] EBSERH PACIENTES listarHistorico() ###");
+		return Response.status(200).entity(lstHistorico).build();
+	}
+
+	@POST
+	@Path("/api/v1/historico")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Registra um novo historico", description = "")
+	public Response inserirHistorico(HistoricoDTO historico) {
+		log.info("### [INICIO] EBSERH PACIENTES inserirHistorico() ###");
+		boolean ret = pacientesService.inserirHistorico(historico);
+		log.info("### [FIM   ] EBSERH PACIENTES inserirHistorico() ###");
+		if (ret)
+			return Response.status(Status.CREATED).entity("SUCESSO").build();
+		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
+	}
+
 	// ---------------------------------- FRONTEND-WEB ------------------------------------------
 	
 	// O REGEX abaixo aproveita todo o subpath de WEB que é passado.

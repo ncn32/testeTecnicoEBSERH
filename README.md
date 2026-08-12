@@ -10,19 +10,67 @@
 - Livre.
 
 **Entregáveis:**
-- Código da API;
-- Testes Unitários;
-- Documentação da API;
-- Readme com instruções de setup e execução;
-- Scripts de banco se houver;
-- Considerações sobre escalabilidade, segurança e manutenção;
+1. Código da API;
+2. Testes Unitários;
+3. Documentação da API;
+4. Readme com instruções de setup e execução;
+5. Scripts de banco se houver;
+6. Considerações sobre escalabilidade, segurança e manutenção;
 
 **Requisitos:**
 > Entregar tudo o que for documentação ou código-fonte em um repositório público no GitHub, as respostas podem ser no **README.md**.
 
 
-**Diagrama de Dados:**
-Diagrama de dados implementado em SQLite. 
-![DiagramaDados](_diagramaTabelas.png)
+**Teste técnico Desenvolvedor BackEnd - Construção de API**
 
+### - CONSTRUÇÃO -
+
+**1. Código da API:**
+*repositório git: .\src\main\java\br\gov\ebserh*
+
+**2. Testes Unitários:**
+*repositório git: .\test*
+
+**3. Documentação da API:**
+*repositório git: .\\*
+*SWAGGER*
+
+**4. Readme com instruções de setup e execução:**
+*Neste mesmo.*
+
+**5. Scripts de banco se houver:**
+*Diagrama de dados implementado em SQLite:*
+![DiagramaDados](_diagramaTabelas.png)
 Obs: só possui tipos básicos e primitivos devido às limitações do SQLite.
+
+*Scripts:*
+**tbl0001_Paciente definition**
+```sql
+CREATE TABLE tbl0001_Paciente (
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	nome TEXT,
+	cpf TEXT,
+	cns TEXT,
+	nascimento TEXT,
+	telefone TEXT
+);
+```
+
+**tbl0002_historico**
+```sql
+CREATE TABLE tbl0002_historico (
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	usuario TEXT,
+	origem TEXT,
+	requisicao TEXT,
+	dhRequisicao TEXT,
+	deRequisicao TEXT,
+	resposta TEXT,
+	dhResposta TEXT,
+	deResposta TEXT);
+```
+
+**6. Considerações sobre escalabilidade, segurança e manutenção:**
+- Aplicação está em JAVA-QUARKUS e configurada para o DOCKER;
+- Template já testado em escalabilidade horizontal de 4 PODs com 2 núcleos + 256MB Ram;
+- A média de transações por segundo foram de 4.000/seg de consumidores.

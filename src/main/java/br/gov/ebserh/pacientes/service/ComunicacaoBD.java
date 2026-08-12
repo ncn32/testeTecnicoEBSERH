@@ -59,7 +59,7 @@ public class ComunicacaoBD extends Thread {
 		return true;
 	}
 	
-	public ResultSet execQuery(String strQuery) {
+	public ResultSet execLeitura(String strQuery) {
 		ResultSet rs = null;
 		
 		if (!fgConexaoOK)
@@ -93,7 +93,7 @@ public class ComunicacaoBD extends Thread {
 		return rs;
 	}
 	
-	public int execModificacao(String strSQL) {
+	public int execEscrita(String strSQL) {
 		int ret = -1;
 		
 		if (!fgConexaoOK)
