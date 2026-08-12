@@ -37,6 +37,10 @@
 **3. Documentação da API:**
 *repositório git: .\\*
 *SWAGGER*
+> Para Swagger embarcado, acessar por exemplo: http://localhost:8080/q/swagger-ui/
+![Swagger](_swagger.png)
+*Caso desejar utilização via POSTMAN ou similar, importe o arquivo de collection EBSERH-Pacientes.postman_collection.json*
+
 
 **4. Readme com instruções de setup e execução:**
 - Para executar a aplicação: _executar.bat
