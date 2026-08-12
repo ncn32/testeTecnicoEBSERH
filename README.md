@@ -22,5 +22,7 @@
 
 
 **Diagrama de Dados:**
-Diagrama de dados implementado em SQLite. Obs: só possui tipos básicos e primitivos.
+Diagrama de dados implementado em SQLite. 
 ![DiagramaDados](_diagramaTabelas.png)
+
+Obs: só possui tipos básicos e primitivos devido às limitações do SQLite.
