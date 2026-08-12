@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComunicacaoBD.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.service</a> &gt; <span class="el_source">ComunicacaoBD.java</span></div><h1>ComunicacaoBD.java</h1><pre class="source lang-java linenums">package br.gov.ebserh.pacientes.service;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+public class ComunicacaoBD extends Thread {
+<span class="fc" id="L12">	boolean fgConexaoOK = false;</span>
+<span class="fc" id="L13">	boolean fgTentandoConectar = false;</span>
+<span class="fc" id="L14">	String strUrlBD = &quot;&quot;;</span>
+<span class="fc" id="L15">	String strUsuario = &quot;&quot;;</span>
+<span class="fc" id="L16">	String strSenha = &quot;&quot;;</span>
+<span class="fc" id="L17">	Connection conn = null;</span>
+	
+<span class="fc" id="L19">	int TENTATIVAS_CONSECUTIVAS_VEZES = 3;</span>
+<span class="fc" id="L20">	int TENTATIVAS_CONSECUTIVAS_DELAY = 30;</span>
+<span class="fc" id="L21">	int TENTATIVAS_AGUARDAR_HORAS = 1;</span>
+	
+<span class="fc" id="L23">	Semaphore semaphoreExec = null;</span>
+ 	
+	public ComunicacaoBD(String strUrlBD, String strUsuario, String strSenha, int simultaneo) {
+<span class="fc" id="L26">		super();</span>
+<span class="fc" id="L27">		this.strUrlBD = strUrlBD;</span>
+<span class="fc" id="L28">		this.strUsuario = strUsuario;</span>
+<span class="fc" id="L29">		this.strSenha = strSenha;</span>
+<span class="fc" id="L30">		semaphoreExec = new Semaphore(simultaneo);</span>
+<span class="fc" id="L31">		semaphoreExec.release();</span>
+<span class="fc" id="L32">	}</span>
+	
+	public boolean conectar() {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		if (conn==null) {</span>
+			try {
+				// Registra explicitamente o driver SQLite (o auto-discovery via
+				// ServiceLoader nao funciona de forma confiavel no empacotamento Quarkus).
+<span class="fc" id="L39">				Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L40">				conn = DriverManager.getConnection(strUrlBD, strUsuario, strSenha);</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">				fgConexaoOK = conn!=null;</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">				if (fgConexaoOK) fgTentandoConectar = false;</span>
+<span class="fc" id="L43">				System.out.println(&quot;CONECTADO COM SUCESSO!&quot;);</span>
+<span class="nc" id="L44">			} catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L45">				System.out.println(&quot;ERRO Driver SQLite nao encontrado: &quot; + e.getMessage());</span>
+<span class="nc" id="L46">			} catch (SQLException e) {</span>
+<span class="nc" id="L47">				System.out.println(&quot;ERRO Conexão SQL: &quot; + e.getMessage());</span>
+<span class="pc" id="L48">			}</span>
+	    }
+<span class="fc" id="L50">		return fgConexaoOK;</span>
+	}
+	
+	public boolean desconectar() {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		if (!fgConexaoOK)</span>
+<span class="fc" id="L55">			return true;</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">		if (conn!=null) {</span>
+			try {
+<span class="fc" id="L58">				conn.close();</span>
+<span class="fc" id="L59">				fgConexaoOK = false;</span>
+<span class="nc" id="L60">			} catch (SQLException e) {</span>
+<span class="fc" id="L61">			}</span>
+<span class="fc" id="L62">			conn = null;</span>
+	    }
+<span class="fc" id="L64">		return true;</span>
+	}
+	
+	public ResultSet execLeitura(String strQuery) {
+<span class="fc" id="L68">		ResultSet rs = null;</span>
+		
+<span class="fc bfc" id="L70" title="All 2 branches covered.">		if (!fgConexaoOK)</span>
+<span class="fc" id="L71">			return null;</span>
+		
+		try {
+<span class="fc" id="L74">			semaphoreExec.tryAcquire(60000, TimeUnit.MILLISECONDS);</span>
+<span class="nc" id="L75">		} catch (InterruptedException e) {</span>
+<span class="nc" id="L76">			return null;</span>
+<span class="fc" id="L77">		}</span>
+		
+		try {
+<span class="fc" id="L80">			Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L81">			rs = stmt.executeQuery(strQuery);</span>
+<span class="nc" id="L82">		} catch (SQLException e) {</span>
+<span class="nc" id="L83">			fgConexaoOK = false;</span>
+<span class="nc" id="L84">			fgTentandoConectar = false;</span>
+<span class="nc" id="L85">			System.out.println(&quot;ERRO: &quot; + e.getMessage());</span>
+<span class="fc" id="L86">		}</span>
+		
+<span class="pc bpc" id="L88" title="3 of 4 branches missed.">		if (!fgConexaoOK &amp;&amp; conn!=null) {</span>
+			try {
+<span class="nc" id="L90">				conn.close();</span>
+<span class="nc" id="L91">			} catch (SQLException e) {</span>
+<span class="nc" id="L92">			}</span>
+<span class="nc" id="L93">			conn = null;</span>
+		}
+		
+<span class="fc" id="L96">		semaphoreExec.release();</span>
+		
+<span class="fc" id="L98">		return rs;</span>
+	}
+	
+	public int execEscrita(String strSQL) {
+<span class="fc" id="L102">		int ret = -1;</span>
+		
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		if (!fgConexaoOK)</span>
+<span class="fc" id="L105">			return -1;</span>
+		
+		try {
+<span class="fc" id="L108">			semaphoreExec.tryAcquire(60000, TimeUnit.MILLISECONDS);</span>
+<span class="nc" id="L109">		} catch (InterruptedException e) {</span>
+<span class="nc" id="L110">			return -1;</span>
+<span class="fc" id="L111">		}</span>
+		
+		try {
+<span class="fc" id="L114">			Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L115">			ret = stmt.executeUpdate(strSQL);</span>
+<span class="nc" id="L116">		} catch (SQLException e) {</span>
+<span class="nc" id="L117">			fgConexaoOK = false;</span>
+<span class="nc" id="L118">			fgTentandoConectar = false;</span>
+<span class="nc" id="L119">			System.out.println(&quot;ERRO: &quot; + e.getMessage());</span>
+<span class="fc" id="L120">		}</span>
+		
+<span class="pc bpc" id="L122" title="3 of 4 branches missed.">		if (!fgConexaoOK &amp;&amp; conn!=null) {</span>
+			try {
+<span class="nc" id="L124">				conn.close();</span>
+<span class="nc" id="L125">			} catch (SQLException e) {</span>
+<span class="nc" id="L126">			}</span>
+<span class="nc" id="L127">			conn = null;</span>
+		}
+		
+<span class="fc" id="L130">		semaphoreExec.release();</span>
+		
+<span class="fc" id="L132">		return ret;</span>
+	}
+	
+	public void run() {
+		//
+<span class="nc" id="L137">		fgConexaoOK = false;</span>
+<span class="nc" id="L138">		fgTentandoConectar = true;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">		if (conn!=null) {</span>
+			try {
+<span class="nc" id="L141">				conn.close();</span>
+<span class="nc" id="L142">			} catch (SQLException e) {</span>
+<span class="nc" id="L143">			}</span>
+		}
+<span class="nc" id="L145">		conn = null;</span>
+<span class="nc bnc" id="L146" title="All 4 branches missed.">		while (conn==null &amp;&amp; fgTentandoConectar) {</span>
+			try {
+<span class="nc" id="L148">				Thread.sleep(30000);</span>
+<span class="nc" id="L149">			} catch (InterruptedException e) {</span>
+<span class="nc" id="L150">				fgTentandoConectar = false;</span>
+<span class="nc" id="L151">				return;</span>
+<span class="nc" id="L152">			}</span>
+<span class="nc" id="L153">			conectar();</span>
+		}
+<span class="nc" id="L155">		fgTentandoConectar = false;</span>
+<span class="nc" id="L156">	}</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>

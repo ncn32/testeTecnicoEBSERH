@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PacientesService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.service</a> &gt; <span class="el_source">PacientesService.java</span></div><h1>PacientesService.java</h1><pre class="source lang-java linenums">package br.gov.ebserh.pacientes.service;
+
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Semaphore;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+//import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.jboss.logging.Logger;
+
+import br.gov.ebserh.pacientes.dto.HistoricoDTO;
+import br.gov.ebserh.pacientes.dto.PacienteDTO;
+
+
+@ApplicationScoped
+public class PacientesService {
+
+	@Inject
+	Logger log;
+
+<span class="fc" id="L33">	static String strLog = &quot;&quot;;</span>
+
+<span class="fc" id="L35">	ComunicacaoBD commBd = null;</span>
+	
+<span class="fc" id="L37">	List&lt;HistoricoDTO&gt; lstHistorico = new ArrayList&lt;HistoricoDTO&gt;();</span>
+<span class="fc" id="L38">	final Semaphore semaphoreIdHistorico = new Semaphore(1);</span>
+<span class="fc" id="L39">	public long idHistoricoUltimo= 0L;</span>
+	
+<span class="fc" id="L41">	List&lt;PacienteDTO&gt; lstParametro = new ArrayList&lt;PacienteDTO&gt;();</span>
+<span class="fc" id="L42">	long idParametroUltimo= 0L;</span>
+	
+<span class="fc" id="L44">	public PacientesService() {</span>
+<span class="fc" id="L45">		Config config = ConfigProvider.getConfig();</span>
+<span class="fc" id="L46">		String strUrlBD = config.getOptionalValue(&quot;BD_URL&quot;, String.class).orElse(&quot;&quot;);</span>
+<span class="fc" id="L47">		String strUsuario = config.getOptionalValue(&quot;BD_USUARIO&quot;, String.class).orElse(&quot;&quot;);</span>
+<span class="fc" id="L48">		String strSenha = config.getOptionalValue(&quot;BD_SENHA&quot;, String.class).orElse(&quot;&quot;);</span>
+<span class="fc" id="L49">		int simultaneo = config.getOptionalValue(&quot;BD_SIMULTANEO&quot;, Integer.class).orElse(3);</span>
+<span class="fc" id="L50">		commBd = new ComunicacaoBD(strUrlBD, strUsuario, strSenha, simultaneo);</span>
+		// try {
+		// 	lstParametro = carregarParametros();
+		// 	idHistoricoUltimo = carregarTotalHistorico();
+		// } catch (Exception ex){
+		// }
+<span class="fc" id="L56">	}</span>
+	
+	// ---------------------------------------------------------------------
+	//  CRUD - PacienteDTO  (tabela tbl0001_Paciente)
+	// ---------------------------------------------------------------------
+
+	private static final String TABELA = &quot;tbl0001_Paciente&quot;;
+
+	/** Escapa aspas simples para evitar quebra/injecao no SQL montado. */
+	private String esc(String valor) {
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		if (valor == null)</span>
+<span class="nc" id="L67">			return &quot;&quot;;</span>
+<span class="fc" id="L68">		return valor.replace(&quot;'&quot;, &quot;''&quot;);</span>
+	}
+
+	/** Mapeia a linha atual do ResultSet para um PacienteDTO. */
+	private PacienteDTO preencherPaciente(ResultSet rs) throws SQLException {
+<span class="fc" id="L73">		PacienteDTO dto = new PacienteDTO();</span>
+<span class="fc" id="L74">		dto.setId(rs.getLong(&quot;id&quot;));</span>
+<span class="fc" id="L75">		dto.setNome(rs.getString(&quot;nome&quot;));</span>
+<span class="fc" id="L76">		dto.setCpf(rs.getString(&quot;cpf&quot;));</span>
+<span class="fc" id="L77">		dto.setCns(rs.getString(&quot;cns&quot;));</span>
+<span class="fc" id="L78">		dto.setNascimento(rs.getString(&quot;nascimento&quot;));</span>
+<span class="fc" id="L79">		dto.setTelefone(rs.getString(&quot;telefone&quot;));</span>
+<span class="fc" id="L80">		return dto;</span>
+	}
+
+	// CREATE
+	public boolean inserir(PacienteDTO paciente) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L86">			return false;</span>
+<span class="fc" id="L87">		String sql = &quot;INSERT INTO &quot; + TABELA + &quot; (nome, cpf, cns, nascimento, telefone) &quot;</span>
+<span class="fc" id="L88">				+ &quot;VALUES('&quot; + esc(paciente.getNome()) + &quot;', '&quot; + esc(paciente.getCpf()) + &quot;', '&quot;</span>
+<span class="fc" id="L89">				+ esc(paciente.getCns()) + &quot;', '&quot; + esc(paciente.getNascimento()) + &quot;', '&quot;</span>
+<span class="fc" id="L90">				+ esc(paciente.getTelefone()) + &quot;');&quot;;</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">		return commBd.execEscrita(sql) &gt; 0;</span>
+	}
+
+	// READ - todos
+	public List&lt;PacienteDTO&gt; listar() {
+<span class="fc" id="L96">		List&lt;PacienteDTO&gt; lista = new ArrayList&lt;PacienteDTO&gt;();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L98">			return lista;</span>
+<span class="fc" id="L99">		String sql = &quot;SELECT id, nome, cpf, cns, nascimento, telefone FROM &quot; + TABELA + &quot; ORDER BY id;&quot;;</span>
+<span class="fc" id="L100">		ResultSet rs = commBd.execLeitura(sql);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">		if (rs == null)</span>
+<span class="fc" id="L102">			return lista;</span>
+		try {
+<span class="fc bfc" id="L104" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L105">				lista.add(preencherPaciente(rs));</span>
+			}
+<span class="nc" id="L107">		} catch (SQLException e) {</span>
+<span class="nc" id="L108">			log.error(&quot;Erro ao listar pacientes: &quot; + e.getMessage());</span>
+<span class="fc" id="L109">		}</span>
+<span class="fc" id="L110">		return lista;</span>
+	}
+
+	// READ - por id
+	public PacienteDTO buscarPorId(long id) {
+<span class="fc bfc" id="L115" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L116">			return null;</span>
+<span class="fc" id="L117">		PacienteDTO dto = null;</span>
+<span class="fc" id="L118">		String sql = &quot;SELECT id, nome, cpf, cns, nascimento, telefone FROM &quot; + TABELA + &quot; WHERE id = &quot; + id + &quot;;&quot;;</span>
+<span class="fc" id="L119">		ResultSet rs = commBd.execLeitura(sql);</span>
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">		if (rs == null)</span>
+<span class="nc" id="L121">			return null;</span>
+		try {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">			if (rs.next()) {</span>
+<span class="fc" id="L124">				dto = preencherPaciente(rs);</span>
+			}
+<span class="nc" id="L126">		} catch (SQLException e) {</span>
+<span class="nc" id="L127">			log.error(&quot;Erro ao buscar paciente: &quot; + e.getMessage());</span>
+<span class="fc" id="L128">		}</span>
+<span class="fc" id="L129">		return dto;</span>
+	}
+
+	// UPDATE
+	public boolean atualizar(PacienteDTO paciente) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L135">			return false;</span>
+<span class="fc" id="L136">		String sql = &quot;UPDATE &quot; + TABELA + &quot; SET &quot;</span>
+<span class="fc" id="L137">				+ &quot;nome = '&quot; + esc(paciente.getNome()) + &quot;', &quot;</span>
+<span class="fc" id="L138">				+ &quot;cpf = '&quot; + esc(paciente.getCpf()) + &quot;', &quot;</span>
+<span class="fc" id="L139">				+ &quot;cns = '&quot; + esc(paciente.getCns()) + &quot;', &quot;</span>
+<span class="fc" id="L140">				+ &quot;nascimento = '&quot; + esc(paciente.getNascimento()) + &quot;', &quot;</span>
+<span class="fc" id="L141">				+ &quot;telefone = '&quot; + esc(paciente.getTelefone()) + &quot;' &quot;</span>
+<span class="fc" id="L142">				+ &quot;WHERE id = &quot; + paciente.getId() + &quot;;&quot;;</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">		return commBd.execEscrita(sql) &gt; 0;</span>
+	}
+
+	// DELETE
+	public boolean excluir(long id) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L149">			return false;</span>
+<span class="fc" id="L150">		String sql = &quot;DELETE FROM &quot; + TABELA + &quot; WHERE id = &quot; + id + &quot;;&quot;;</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">		return commBd.execEscrita(sql) &gt; 0;</span>
+	}
+
+	// ---------------------------------------------------------------------
+	//  HISTORICO - HistoricoDTO  (tabela tbl0002_historico)
+	// ---------------------------------------------------------------------
+
+	private static final String TABELA_HISTORICO = &quot;tbl0002_historico&quot;;
+
+	/** Mapeia a linha atual do ResultSet para um HistoricoDTO. */
+	private HistoricoDTO preencherHistorico(ResultSet rs) throws SQLException {
+<span class="fc" id="L162">		HistoricoDTO dto = new HistoricoDTO();</span>
+<span class="fc" id="L163">		dto.setId(rs.getLong(&quot;id&quot;));</span>
+<span class="fc" id="L164">		dto.setUsuario(rs.getString(&quot;usuario&quot;));</span>
+<span class="fc" id="L165">		dto.setOrigem(rs.getString(&quot;origem&quot;));</span>
+<span class="fc" id="L166">		dto.setRequisicao(rs.getString(&quot;requisicao&quot;));</span>
+<span class="fc" id="L167">		dto.setDhRequisicao(rs.getString(&quot;dhRequisicao&quot;));</span>
+<span class="fc" id="L168">		dto.setDeRequisicao(rs.getString(&quot;deRequisicao&quot;));</span>
+<span class="fc" id="L169">		dto.setResposta(rs.getString(&quot;resposta&quot;));</span>
+<span class="fc" id="L170">		dto.setDhResposta(rs.getString(&quot;dhResposta&quot;));</span>
+<span class="fc" id="L171">		dto.setDeResposta(rs.getString(&quot;deResposta&quot;));</span>
+<span class="fc" id="L172">		return dto;</span>
+	}
+
+	// CREATE
+	public boolean inserirHistorico(HistoricoDTO historico) {
+<span class="fc bfc" id="L177" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L178">			return false;</span>
+<span class="fc" id="L179">		String sql = &quot;INSERT INTO &quot; + TABELA_HISTORICO</span>
+				+ &quot; (usuario, origem, requisicao, dhRequisicao, deRequisicao, resposta, dhResposta, deResposta) &quot;
+<span class="fc" id="L181">				+ &quot;VALUES('&quot; + esc(historico.getUsuario()) + &quot;', '&quot; + esc(historico.getOrigem()) + &quot;', '&quot;</span>
+<span class="fc" id="L182">				+ esc(historico.getRequisicao()) + &quot;', '&quot; + esc(historico.getDhRequisicao()) + &quot;', '&quot;</span>
+<span class="fc" id="L183">				+ esc(historico.getDeRequisicao()) + &quot;', '&quot; + esc(historico.getResposta()) + &quot;', '&quot;</span>
+<span class="fc" id="L184">				+ esc(historico.getDhResposta()) + &quot;', '&quot; + esc(historico.getDeResposta()) + &quot;');&quot;;</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">		return commBd.execEscrita(sql) &gt; 0;</span>
+	}
+
+	// READ - todos
+	public List&lt;HistoricoDTO&gt; listarHistorico() {
+<span class="fc" id="L190">		List&lt;HistoricoDTO&gt; lista = new ArrayList&lt;HistoricoDTO&gt;();</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">		if (!commBd.conectar())</span>
+<span class="fc" id="L192">			return lista;</span>
+<span class="fc" id="L193">		String sql = &quot;SELECT id, usuario, origem, requisicao, dhRequisicao, deRequisicao, resposta, dhResposta, deResposta &quot;</span>
+				+ &quot;FROM &quot; + TABELA_HISTORICO + &quot; ORDER BY id;&quot;;
+<span class="fc" id="L195">		ResultSet rs = commBd.execLeitura(sql);</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">		if (rs == null)</span>
+<span class="nc" id="L197">			return lista;</span>
+		try {
+<span class="fc bfc" id="L199" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L200">				lista.add(preencherHistorico(rs));</span>
+			}
+<span class="nc" id="L202">		} catch (SQLException e) {</span>
+<span class="nc" id="L203">			log.error(&quot;Erro ao listar historico: &quot; + e.getMessage());</span>
+<span class="fc" id="L204">		}</span>
+<span class="fc" id="L205">		return lista;</span>
+	}
+
+	private String getResourceFileAsString(String fileName) {
+	    try {
+<span class="nc" id="L210">	    	return IOUtils.toString(this.getClass().getResourceAsStream(&quot;/&quot;+fileName), &quot;UTF-8&quot;);</span>
+	    }
+<span class="nc" id="L212">	    catch(Exception ex) {</span>
+<span class="nc" id="L213">	    	return &quot;ERRO: &quot; + ex.toString();</span>
+	    }
+	}
+
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>

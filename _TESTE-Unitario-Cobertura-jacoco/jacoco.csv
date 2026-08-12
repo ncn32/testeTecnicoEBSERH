@@ -1,0 +1,22 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp500CustomException,ErroInterno500CustomException,20,0,0,0,7,0,3,0,3,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp500CustomException,ErroInterno500CustomExceptionHandler,7,3,0,0,4,1,1,1,1,1
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp500ErroInterno,ErroInterno500Exception,16,0,0,0,8,0,4,0,4,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp500ErroInterno,ErroInterno500ExceptionHandler,7,3,0,0,4,1,1,1,1,1
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.util,CpfCnpjUtil,398,0,90,0,76,0,51,0,6,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.util,CodigoRetornoMainframeHandler,40,0,3,0,8,0,4,0,2,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception,EnumMensagensErro,43,0,0,0,9,0,3,0,3,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception,MensagemDetalhe,61,0,0,0,18,0,5,0,5,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp400ErroRequisicao,ErroRequisicao400ExceptionHandler,7,3,0,0,4,1,1,1,1,1
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp400ErroRequisicao,ErroRequisicao400Exception,16,0,0,0,8,0,4,0,4,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp413ErroRequisicaoTamanho,ErroRequisicao413ExceptionHandler,7,3,0,0,4,1,1,1,1,1
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp413ErroRequisicaoTamanho,ErroRequisicao413Exception,16,0,0,0,8,0,4,0,4,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.dto,PacienteDTO,0,63,0,0,0,25,0,13,0,13
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.dto,HistoricoDTO,0,95,0,0,0,39,0,19,0,19
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp409Custom,Erro409CustomException,20,0,0,0,7,0,3,0,3,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.commons.exception.HttpResp409Custom,Erro409CustomExceptionHandler,7,3,0,0,4,1,1,1,1,1
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.controller,PacientesController,304,208,94,10,62,41,49,14,2,9
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.service,Resources,12,0,0,0,3,0,3,0,3,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.service,CustomRestHeaderFilter,17,0,0,0,6,0,2,0,2,0
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.service,ComunicacaoBD,130,168,15,13,41,55,11,9,1,5
+Cobertura EBSERH Pacientes - 2026-08-12 16:15:24,br.gov.ebserh.pacientes.service,PacientesService,73,492,6,30,12,96,7,24,1,12

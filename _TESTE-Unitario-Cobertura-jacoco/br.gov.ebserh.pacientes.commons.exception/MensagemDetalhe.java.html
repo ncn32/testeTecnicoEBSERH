@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MensagemDetalhe.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.commons.exception</a> &gt; <span class="el_source">MensagemDetalhe.java</span></div><h1>MensagemDetalhe.java</h1><pre class="source lang-java linenums">package br.gov.ebserh.pacientes.commons.exception;
+
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+@Schema(name=&quot;Detalhe&quot;, description=&quot;Detalhes erro&quot;)
+public class MensagemDetalhe implements Serializable{
+
+    @JsonProperty(index = 1)
+    @Schema(description=&quot;Indica o codigo do erro&quot;, required = false)
+    private int codigo;
+
+<span class="nc" id="L17">    @JsonProperty(index = 2)</span>
+    @Schema(description=&quot;Descricao do erro&quot;, required = false)
+    private String descricao = &quot;&quot;;
+
+<span class="nc" id="L21">    public MensagemDetalhe(EnumMensagensErro enumMensagensErro) {</span>
+<span class="nc" id="L22">        this.codigo = enumMensagensErro.codigo;</span>
+<span class="nc" id="L23">        this.descricao = enumMensagensErro.descricao;</span>
+<span class="nc" id="L24">    }</span>
+
+<span class="nc" id="L26">    public MensagemDetalhe(int codigo, String descricao) {</span>
+<span class="nc" id="L27">        this.codigo = codigo;</span>
+<span class="nc" id="L28">        this.descricao = descricao;</span>
+<span class="nc" id="L29">    }</span>
+
+    public int getCodigo() {
+<span class="nc" id="L32">        return codigo;</span>
+    }
+
+    public String getDescricao() {
+<span class="nc" id="L36">        return descricao;</span>
+    }
+
+    @JsonIgnore
+    public String getMensagemMainframe(){
+<span class="nc" id="L41">        StringBuilder msgErro = new StringBuilder();</span>
+<span class="nc" id="L42">        msgErro.append(&quot;ERRO MAINFRAME&quot;);</span>
+<span class="nc" id="L43">        msgErro.append(&quot; - RETURN CODE: &quot;);</span>
+<span class="nc" id="L44">        msgErro.append(codigo);</span>
+<span class="nc" id="L45">        msgErro.append(&quot; - MENSAGEM: &quot;);</span>
+<span class="nc" id="L46">        msgErro.append(descricao);</span>
+<span class="nc" id="L47">        return msgErro.toString();</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>

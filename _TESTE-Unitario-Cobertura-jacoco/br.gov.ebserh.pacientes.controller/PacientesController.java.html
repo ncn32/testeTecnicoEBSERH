@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PacientesController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.controller</a> &gt; <span class="el_source">PacientesController.java</span></div><h1>PacientesController.java</h1><pre class="source lang-java linenums">//*****************************************************************************
+//*                    EBSERH-PACIENTES CONTROLLER
+//*                           GEQTI-2023
+//*
+//******************************************************************************
+
+package br.gov.ebserh.pacientes.controller;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.logging.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.gov.ebserh.pacientes.dto.HistoricoDTO;
+import br.gov.ebserh.pacientes.dto.PacienteDTO;
+import br.gov.ebserh.pacientes.service.PacientesService;
+
+
+
+@Path(&quot;/&quot;)
+
+//@SecuritySchemes( value = {
+//	@SecurityScheme(
+//			securitySchemeName = &quot;apiKey&quot;, 
+//			type = SecuritySchemeType.APIKEY, 
+//			in = SecuritySchemeIn.HEADER, 
+//			apiKeyName = &quot;X-API-KEY&quot;				
+//			),
+//	@SecurityScheme(
+//			securitySchemeName = &quot;access_token_sso&quot;, 
+//			type = SecuritySchemeType.HTTP, 
+//			scheme = &quot;bearer&quot;, 
+//			bearerFormat = &quot;jwt&quot;
+//			)		
+//	}
+//)
+
+@Tag(name = &quot;EBSERH Pacientes&quot;)
+@ApplicationScoped
+//@Authenticated
+<span class="fc" id="L71">public class PacientesController {</span>
+
+	@Inject
+	Logger log;
+	
+	@Inject
+	PacientesService pacientesService;
+
+	public static final java.lang.String APPLICATION_XML_VALUE = &quot;application/xml&quot;;
+	public static final java.lang.String APPLICATION_JSON_VALUE = &quot;application/json&quot;;
+	public static final java.lang.String ALL_VALUE = &quot;*/*&quot;;
+	
+	public static String getClientIpAddr(HttpServletRequest request) {  
+<span class="nc" id="L84">	    String ip = request.getHeader(&quot;X-Forwarded-For&quot;);  </span>
+<span class="nc bnc" id="L85" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L86">	        ip = request.getHeader(&quot;Proxy-Client-IP&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L88" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L89">	        ip = request.getHeader(&quot;WL-Proxy-Client-IP&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L91" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L92">	        ip = request.getHeader(&quot;HTTP_X_FORWARDED_FOR&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L94" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L95">	        ip = request.getHeader(&quot;HTTP_X_FORWARDED&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L97" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L98">	        ip = request.getHeader(&quot;HTTP_X_CLUSTER_CLIENT_IP&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L100" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L101">	        ip = request.getHeader(&quot;HTTP_CLIENT_IP&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L103" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L104">	        ip = request.getHeader(&quot;HTTP_FORWARDED_FOR&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L106" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L107">	        ip = request.getHeader(&quot;HTTP_FORWARDED&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L109" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L110">	        ip = request.getHeader(&quot;HTTP_VIA&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L112" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L113">	        ip = request.getHeader(&quot;REMOTE_ADDR&quot;);  </span>
+	    }  
+<span class="nc bnc" id="L115" title="All 6 branches missed.">	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase(&quot;unknown&quot;)) {  </span>
+<span class="nc" id="L116">	        ip = request.getRemoteAddr();  </span>
+	    }  
+<span class="nc" id="L118">	    return ip;  </span>
+	}	
+	
+	@GET
+	@Path(&quot;/api/v1/keepalive&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;KeepAlive da aplicação&quot;, description = &quot;&quot;)
+	public Response teste() {
+<span class="fc" id="L127">		return Response.ok(&quot;TESTE-OK&quot;).build();</span>
+	}
+	
+	// ---------------------------------- CRUD PACIENTES ------------------------------------------
+
+	@GET
+	@Path(&quot;/api/v1/pacientes&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Lista todos os pacientes&quot;, description = &quot;&quot;)
+	public Response listarPacientes() {
+<span class="fc" id="L138">		log.info(&quot;### [INICIO] EBSERH PACIENTES listarPacientes() ###&quot;);</span>
+<span class="fc" id="L139">		List&lt;PacienteDTO&gt; lstPacientes = pacientesService.listar();</span>
+<span class="fc" id="L140">		log.info(&quot;### [FIM   ] EBSERH PACIENTES listarPacientes() ###&quot;);</span>
+<span class="fc" id="L141">		return Response.status(200).entity(lstPacientes).build();</span>
+	}
+
+	@GET
+	@Path(&quot;/api/v1/pacientes/{id}&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Busca um paciente pelo id&quot;, description = &quot;&quot;)
+	public Response buscarPaciente(@PathParam(&quot;id&quot;) long id) {
+<span class="fc" id="L150">		log.info(&quot;### [INICIO] EBSERH PACIENTES buscarPaciente(&quot; + id + &quot;) ###&quot;);</span>
+<span class="fc" id="L151">		PacienteDTO paciente = pacientesService.buscarPorId(id);</span>
+<span class="fc" id="L152">		log.info(&quot;### [FIM   ] EBSERH PACIENTES buscarPaciente() ###&quot;);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">		if (paciente == null)</span>
+<span class="fc" id="L154">			return Response.status(Status.NOT_FOUND).entity(&quot;PACIENTE NAO ENCONTRADO&quot;).build();</span>
+<span class="fc" id="L155">		return Response.status(200).entity(paciente).build();</span>
+	}
+
+	@POST
+	@Path(&quot;/api/v1/pacientes&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Cadastra um novo paciente&quot;, description = &quot;&quot;)
+	public Response inserirPaciente(PacienteDTO paciente) {
+<span class="fc" id="L164">		log.info(&quot;### [INICIO] EBSERH PACIENTES inserirPaciente() ###&quot;);</span>
+<span class="fc" id="L165">		boolean ret = pacientesService.inserir(paciente);</span>
+<span class="fc" id="L166">		log.info(&quot;### [FIM   ] EBSERH PACIENTES inserirPaciente() ###&quot;);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">		if (ret)</span>
+<span class="fc" id="L168">			return Response.status(Status.CREATED).entity(&quot;SUCESSO&quot;).build();</span>
+<span class="fc" id="L169">		return Response.status(Status.BAD_REQUEST).entity(&quot;ERRO&quot;).build();</span>
+	}
+
+	@PUT
+	@Path(&quot;/api/v1/pacientes/{id}&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Atualiza um paciente existente&quot;, description = &quot;&quot;)
+	public Response atualizarPaciente(@PathParam(&quot;id&quot;) long id, PacienteDTO paciente) {
+<span class="fc" id="L178">		log.info(&quot;### [INICIO] EBSERH PACIENTES atualizarPaciente(&quot; + id + &quot;) ###&quot;);</span>
+<span class="fc" id="L179">		paciente.setId(id);</span>
+<span class="fc" id="L180">		boolean ret = pacientesService.atualizar(paciente);</span>
+<span class="fc" id="L181">		log.info(&quot;### [FIM   ] EBSERH PACIENTES atualizarPaciente() ###&quot;);</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">		if (ret)</span>
+<span class="fc" id="L183">			return Response.status(200).entity(&quot;SUCESSO&quot;).build();</span>
+<span class="fc" id="L184">		return Response.status(Status.BAD_REQUEST).entity(&quot;ERRO&quot;).build();</span>
+	}
+
+	@DELETE
+	@Path(&quot;/api/v1/pacientes/{id}&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Exclui um paciente pelo id&quot;, description = &quot;&quot;)
+	public Response excluirPaciente(@PathParam(&quot;id&quot;) long id) {
+<span class="fc" id="L193">		log.info(&quot;### [INICIO] EBSERH PACIENTES excluirPaciente(&quot; + id + &quot;) ###&quot;);</span>
+<span class="fc" id="L194">		boolean ret = pacientesService.excluir(id);</span>
+<span class="fc" id="L195">		log.info(&quot;### [FIM   ] EBSERH PACIENTES excluirPaciente() ###&quot;);</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">		if (ret)</span>
+<span class="fc" id="L197">			return Response.status(200).entity(&quot;SUCESSO&quot;).build();</span>
+<span class="fc" id="L198">		return Response.status(Status.BAD_REQUEST).entity(&quot;ERRO&quot;).build();</span>
+	}
+
+	// ---------------------------------- HISTORICO ------------------------------------------
+
+	@GET
+	@Path(&quot;/api/v1/historico&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Lista todo o historico&quot;, description = &quot;&quot;)
+	public Response listarHistorico() {
+<span class="fc" id="L209">		log.info(&quot;### [INICIO] EBSERH PACIENTES listarHistorico() ###&quot;);</span>
+<span class="fc" id="L210">		List&lt;HistoricoDTO&gt; lstHistorico = pacientesService.listarHistorico();</span>
+<span class="fc" id="L211">		log.info(&quot;### [FIM   ] EBSERH PACIENTES listarHistorico() ###&quot;);</span>
+<span class="fc" id="L212">		return Response.status(200).entity(lstHistorico).build();</span>
+	}
+
+	@POST
+	@Path(&quot;/api/v1/historico&quot;)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = &quot;Registra um novo historico&quot;, description = &quot;&quot;)
+	public Response inserirHistorico(HistoricoDTO historico) {
+<span class="fc" id="L221">		log.info(&quot;### [INICIO] EBSERH PACIENTES inserirHistorico() ###&quot;);</span>
+<span class="fc" id="L222">		boolean ret = pacientesService.inserirHistorico(historico);</span>
+<span class="fc" id="L223">		log.info(&quot;### [FIM   ] EBSERH PACIENTES inserirHistorico() ###&quot;);</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">		if (ret)</span>
+<span class="fc" id="L225">			return Response.status(Status.CREATED).entity(&quot;SUCESSO&quot;).build();</span>
+<span class="fc" id="L226">		return Response.status(Status.BAD_REQUEST).entity(&quot;ERRO&quot;).build();</span>
+	}
+
+	// ---------------------------------- FRONTEND-WEB ------------------------------------------
+	
+	// O REGEX abaixo aproveita todo o subpath de WEB que é passado.
+	@GET
+	@Path(&quot;/web/{subPath:.*}&quot;)
+	public Response web(@Context UriInfo uriInfo, @PathParam(&quot;subPath&quot;) String subPath) {
+		//System.out.println(&quot;subPath: &quot; + subPath);
+		//return Response.ok(&quot;subPath: &quot; + subPath + &quot;\n&quot; + &quot;UriInfo: &quot; + uriInfo.getPath()).build();
+<span class="nc" id="L237">		byte[] bytes = null;</span>
+<span class="nc" id="L238">		String mediaType = MediaType.TEXT_HTML;</span>
+<span class="nc" id="L239">		String strResourcePath = &quot;&quot;;</span>
+		
+		// Aqui aponta para o documento default caso não especifique o arquivo.
+<span class="nc bnc" id="L242" title="All 2 branches missed.">		if (subPath.equalsIgnoreCase(&quot;console&quot;))</span>
+<span class="nc" id="L243">			strResourcePath = &quot;/webapp/console.html&quot;;</span>
+		else
+<span class="nc" id="L245">			strResourcePath = &quot;/webapp/&quot;+subPath;</span>
+		
+		// Scripts
+<span class="nc bnc" id="L248" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.css&quot;)&gt;0)</span>
+<span class="nc" id="L249">			mediaType = &quot;text/css&quot;;</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.js&quot;)&gt;0)</span>
+<span class="nc" id="L251">			mediaType = &quot;text/javascript&quot;;</span>
+		// Images
+<span class="nc bnc" id="L253" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.gif&quot;)&gt;0)</span>
+<span class="nc" id="L254">			mediaType = &quot;image/gif&quot;;</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.png&quot;)&gt;0)</span>
+<span class="nc" id="L256">			mediaType = &quot;image/png&quot;;</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.svg&quot;)&gt;0)</span>
+<span class="nc" id="L258">			mediaType = &quot;image/svg+xml&quot;;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.jpg&quot;)&gt;0)</span>
+<span class="nc" id="L260">			mediaType = &quot;image/jpg&quot;;</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.bmp&quot;)&gt;0)</span>
+<span class="nc" id="L262">			mediaType = &quot;image/bmp&quot;;</span>
+		// Fonts
+<span class="nc bnc" id="L264" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.ttf&quot;)&gt;0)</span>
+<span class="nc" id="L265">			mediaType = &quot;application/x-font-ttf&quot;;</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.otf&quot;)&gt;0)</span>
+<span class="nc" id="L267">			mediaType = &quot;application/x-font-opentype&quot;;</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.eot&quot;)&gt;0)</span>
+<span class="nc" id="L269">			mediaType = &quot;application/vnd.ms-fontobject&quot;;</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.eot&quot;)&gt;0)</span>
+<span class="nc" id="L271">			mediaType = &quot;application/vnd.ms-fontobject&quot;;</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.sfnt&quot;)&gt;0)</span>
+<span class="nc" id="L273">			mediaType = &quot;application/font-sfnt&quot;;</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">		if (subPath.toLowerCase().indexOf(&quot;.woff2&quot;)&gt;0)</span>
+<span class="nc" id="L275">			mediaType = &quot;application/font-woff2&quot;;</span>
+		
+<span class="nc" id="L277">		System.out.println(&quot;[RECURSO]: &quot; + strResourcePath + &quot;  (mediaType:&quot; + mediaType + &quot;)&quot;);</span>
+		
+		try {
+			//bytes = IOUtils.resourceToByteArray(strResourcePath, );
+<span class="nc" id="L281">			bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(strResourcePath));</span>
+<span class="nc" id="L282">		} catch (Exception e) {</span>
+<span class="nc" id="L283">			System.out.println(&quot;[ERRO]: &quot; + e.getMessage());</span>
+<span class="nc" id="L284">		}</span>
+		
+<span class="nc" id="L286">		return Response.status(Status.OK).type(mediaType).entity(bytes).build();</span>
+	}
+	
+	
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>

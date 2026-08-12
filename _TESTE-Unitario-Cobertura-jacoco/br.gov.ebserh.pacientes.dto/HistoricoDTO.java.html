@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HistoricoDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.dto</a> &gt; <span class="el_source">HistoricoDTO.java</span></div><h1>HistoricoDTO.java</h1><pre class="source lang-java linenums">package br.gov.ebserh.pacientes.dto;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@Schema(name=&quot;Historico&quot;, description=&quot;Historico da trilha de auditoria&quot;)
+<span class="fc" id="L13">public class HistoricoDTO {</span>
+	// ATENÇÃO: variáveis do JSON primeira letra sempre em minúsculo,
+	// pois a lib não interpreta direito.
+	
+<span class="fc" id="L17">	@JsonProperty(index = 1)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	long id = 0;
+	
+<span class="fc" id="L21">	@JsonProperty(index = 2)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String usuario = &quot;&quot;;
+	
+<span class="fc" id="L25">	@JsonProperty(index = 3)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String origem = &quot;&quot;;
+	
+<span class="fc" id="L29">	@JsonProperty(index = 4)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String requisicao = &quot;&quot;;
+	
+<span class="fc" id="L33">	@JsonProperty(index = 5)</span>
+	@Schema(description=&quot;&quot;, required = false)
+<span class="fc" id="L35">	String dhRequisicao = LocalDateTime.now().toString();</span>
+	
+<span class="fc" id="L37">	@JsonProperty(index = 6)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String deRequisicao = &quot;&quot;;
+	
+<span class="fc" id="L41">	@JsonProperty(index = 7)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String resposta = &quot;&quot;;
+	
+<span class="fc" id="L45">	@JsonProperty(index = 8)</span>
+	@Schema(description=&quot;&quot;, required = false)
+<span class="fc" id="L47">	String dhResposta = LocalDateTime.now().toString();</span>
+	
+<span class="fc" id="L49">	@JsonProperty(index = 9)</span>
+	@Schema(description=&quot;&quot;, required = false)
+	String deResposta = &quot;&quot;;
+
+	public long getId() {
+<span class="fc" id="L54">		return id;</span>
+	}
+
+	public void setId(long id) {
+<span class="fc" id="L58">		this.id = id;</span>
+<span class="fc" id="L59">	}</span>
+
+	public String getUsuario() {
+<span class="fc" id="L62">		return usuario;</span>
+	}
+
+	public void setUsuario(String usuario) {
+<span class="fc" id="L66">		this.usuario = usuario;</span>
+<span class="fc" id="L67">	}</span>
+
+	public String getOrigem() {
+<span class="fc" id="L70">		return origem;</span>
+	}
+
+	public void setOrigem(String origem) {
+<span class="fc" id="L74">		this.origem = origem;</span>
+<span class="fc" id="L75">	}</span>
+
+	public String getRequisicao() {
+<span class="fc" id="L78">		return requisicao;</span>
+	}
+
+	public void setRequisicao(String requisicao) {
+<span class="fc" id="L82">		this.requisicao = requisicao;</span>
+<span class="fc" id="L83">	}</span>
+
+	public String getDhRequisicao() {
+<span class="fc" id="L86">		return dhRequisicao;</span>
+	}
+
+	public void setDhRequisicao(String dhRequisicao) {
+<span class="fc" id="L90">		this.dhRequisicao = dhRequisicao;</span>
+<span class="fc" id="L91">	}</span>
+
+	public String getResposta() {
+<span class="fc" id="L94">		return resposta;</span>
+	}
+
+	public void setResposta(String resposta) {
+<span class="fc" id="L98">		this.resposta = resposta;</span>
+<span class="fc" id="L99">	}</span>
+
+	public String getDhResposta() {
+<span class="fc" id="L102">		return dhResposta;</span>
+	}
+
+	public void setDhResposta(String dhResposta) {
+<span class="fc" id="L106">		this.dhResposta = dhResposta;</span>
+<span class="fc" id="L107">	}</span>
+
+	public String getDeRequisicao() {
+<span class="fc" id="L110">		return deRequisicao;</span>
+	}
+
+	public void setDeRequisicao(String deRequisicao) {
+<span class="fc" id="L114">		this.deRequisicao = deRequisicao;</span>
+<span class="fc" id="L115">	}</span>
+
+	public String getDeResposta() {
+<span class="fc" id="L118">		return deResposta;</span>
+	}
+
+	public void setDeResposta(String deResposta) {
+<span class="fc" id="L122">		this.deResposta = deResposta;</span>
+<span class="fc" id="L123">	}</span>
+
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>

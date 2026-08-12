@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ErroInterno500ExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Cobertura EBSERH Pacientes - 2026-08-12 16:15:24</a> &gt; <a href="index.source.html" class="el_package">br.gov.ebserh.pacientes.commons.exception.HttpResp500ErroInterno</a> &gt; <span class="el_source">ErroInterno500ExceptionHandler.java</span></div><h1>ErroInterno500ExceptionHandler.java</h1><pre class="source lang-java linenums">package br.gov.ebserh.pacientes.commons.exception.HttpResp500ErroInterno;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import br.gov.ebserh.pacientes.commons.exception.EnumMensagensErro;
+
+@Provider
+<span class="fc" id="L11">public class ErroInterno500ExceptionHandler implements ExceptionMapper&lt;ErroInterno500Exception&gt; {</span>
+   
+    @Override
+    public Response toResponse(ErroInterno500Exception exception) {
+<span class="nc" id="L15">        return Response</span>
+<span class="nc" id="L16">                .status(Status.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L17">                .entity(EnumMensagensErro.HTTP_RESP_500.getDetalheErro())</span>
+<span class="nc" id="L18">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span>Relatorio gerado em 2026-08-12 16:15:24</div></body></html>
