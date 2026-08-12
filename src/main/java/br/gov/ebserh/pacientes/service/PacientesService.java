@@ -158,7 +158,7 @@ public class PacientesService {
 	private static final String TABELA_HISTORICO = "tbl0002_historico";
 
 	/** Mapeia a linha atual do ResultSet para um HistoricoDTO. */
-	private HistoricoDTO montarHistorico(ResultSet rs) throws SQLException {
+	private HistoricoDTO preencherHistorico(ResultSet rs) throws SQLException {
 		HistoricoDTO dto = new HistoricoDTO();
 		dto.setId(rs.getLong("id"));
 		dto.setUsuario(rs.getString("usuario"));
@@ -197,7 +197,7 @@ public class PacientesService {
 			return lista;
 		try {
 			while (rs.next()) {
-				lista.add(montarHistorico(rs));
+				lista.add(preencherHistorico(rs));
 			}
 		} catch (SQLException e) {
 			log.error("Erro ao listar historico: " + e.getMessage());

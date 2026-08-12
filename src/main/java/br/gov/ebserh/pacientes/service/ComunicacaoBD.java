@@ -34,10 +34,15 @@ public class ComunicacaoBD extends Thread {
 	public boolean conectar() {
 		if (conn==null) {
 			try {
+				// Registra explicitamente o driver SQLite (o auto-discovery via
+				// ServiceLoader nao funciona de forma confiavel no empacotamento Quarkus).
+				Class.forName("org.sqlite.JDBC");
 				conn = DriverManager.getConnection(strUrlBD, strUsuario, strSenha);
 				fgConexaoOK = conn!=null;
 				if (fgConexaoOK) fgTentandoConectar = false;
 				System.out.println("CONECTADO COM SUCESSO!");
+			} catch (ClassNotFoundException e) {
+				System.out.println("ERRO Driver SQLite nao encontrado: " + e.getMessage());
 			} catch (SQLException e) {
 				System.out.println("ERRO Conexão SQL: " + e.getMessage());
 			}
