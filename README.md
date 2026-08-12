@@ -24,6 +24,7 @@
 **Teste técnico Desenvolvedor BackEnd - Construção de API**
 
 ### - CONSTRUÇÃO -
+*Implementado em QUARKUS e compatível com JAVA-21*
 
 **1. Código da API:**
 *repositório git: .\src\main\java\br\gov\ebserh*

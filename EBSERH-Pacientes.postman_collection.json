@@ -1,0 +1,153 @@
+{
+	"info": {
+		"name": "EBSERH Pacientes API",
+		"description": "CRUD de Pacientes e Historico. Ajuste a variavel baseUrl conforme o ambiente.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Pacientes",
+			"item": [
+				{
+					"name": "Listar pacientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/pacientes",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "pacientes" ]
+						}
+					}
+				},
+				{
+					"name": "Buscar paciente por id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/pacientes/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "pacientes", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Cadastrar paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Jose Souza\",\n    \"cpf\": \"12345678909\",\n    \"cns\": \"700000000000001\",\n    \"nascimento\": \"1980-01-01\",\n    \"telefone\": \"+550012345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/pacientes",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "pacientes" ]
+						}
+					}
+				},
+				{
+					"name": "Atualizar paciente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Jose Souza Silva\",\n    \"cpf\": \"12345678909\",\n    \"cns\": \"700000000000001\",\n    \"nascimento\": \"1980-01-01\",\n    \"telefone\": \"+550099998888\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/pacientes/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "pacientes", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Excluir paciente",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/pacientes/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "pacientes", "1" ]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Historico",
+			"item": [
+				{
+					"name": "Listar historico",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/historico",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "historico" ]
+						}
+					}
+				},
+				{
+					"name": "Registrar historico",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\": \"jose@email.com.br\",\n    \"origem\": \"127.0.0.1\",\n    \"requisicao\": \"INCLUSAO\",\n    \"dhRequisicao\": \"2026-08-12 13:30:00\",\n    \"deRequisicao\": \"abcdefghij\",\n    \"resposta\": \"200-OK\",\n    \"dhResposta\": \"2026-08-12 13:30:02\",\n    \"deResposta\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/historico",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "v1", "historico" ]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "KeepAlive",
+			"request": {
+				"method": "GET",
+				"header": [
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/keepalive",
+					"host": [ "{{baseUrl}}" ],
+					"path": [ "api", "v1", "keepalive" ]
+				}
+			}
+		}
+	]
+}

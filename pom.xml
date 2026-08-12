@@ -26,6 +26,7 @@
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 		<quarkus.platform.version>1.11.1.Final</quarkus.platform.version>
 		<surefire-plugin.version>2.22.1</surefire-plugin.version>
+		<jacoco-plugin.version>0.8.8</jacoco-plugin.version>
 
 		<!-- other plugin versions -->
 		<version.compiler.plugin>2.3.2</version.compiler.plugin>
@@ -258,6 +259,28 @@
 						<maven.home>${maven.home}</maven.home>
 					</systemPropertyVariables>
 				</configuration>
+			</plugin>
+
+			<!-- COBERTURA DE TESTES (JaCoCo) -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- PLUGIN pra gerar a parte WEB -->
