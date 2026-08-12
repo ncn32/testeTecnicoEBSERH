@@ -31,6 +31,8 @@
 
 **2. Testes Unitários:**
 *repositório git: .\test*
+*Para executar teste e gerar relatório "mvn clean verify -Dmaven.test.skip=false"
+*Relatório já gerado em _TESTE-Unitario-Cobertura-jacoco*
 
 **3. Documentação da API:**
 *repositório git: .\\*
@@ -38,6 +40,8 @@
 
 **4. Readme com instruções de setup e execução:**
 *Neste mesmo.*
+*Para executar a aplicação: _executar.bat*
+*Edite o JAVA_HOME para um java-jdk de versão 21.*
 
 **5. Scripts de banco se houver:**
 *Diagrama de dados implementado em SQLite:*
