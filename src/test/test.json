@@ -1,0 +1,17 @@
+{
+	"__COMMENT__": "------------ CASO TODOS ------------",
+	"parametro": "prmteste",
+	"usuario": "c891081",
+	"senha": "Teste01",
+	"testecase":{
+		"cpf": "88205010404",
+		"codigo_avaliacao": "1",
+		"ispb": "AAAABBBBCCCCDDDD",
+		"dados": {
+					"prmA": "AAAA",
+					"prmB": "BBBB",
+					"prmC": "CCCC"
+				}
+	}
+	
+}

@@ -19,3 +19,8 @@
 
 **Requisitos:**
 > Entregar tudo o que for documentação ou código-fonte em um repositório público no GitHub, as respostas podem ser no **README.md**.
+
+
+**Diagrama de Dados:**
+Diagrama de dados implementado em SQLite. Obs: só possui tipos básicos e primitivos.
+![DiagramaDados](_diagramaTabelas.png)

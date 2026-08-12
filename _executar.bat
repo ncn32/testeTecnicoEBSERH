@@ -1,0 +1,2 @@
+set JAVA_HOME=C:\openjdk-21.0.1_windows-x64
+C:\openjdk-21.0.1_windows-x64\bin\java.exe -Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8080 -Dquarkus.native.native-image-xmx=6g -jar .\target\quarkus-app\quarkus-run.jar

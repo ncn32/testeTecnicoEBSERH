@@ -1,0 +1,289 @@
+//*****************************************************************************
+//*                    EBSERH-PACIENTES CONTROLLER
+//*                           GEQTI-2023
+//*
+//******************************************************************************
+
+package br.gov.ebserh.pacientes.controller;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.logging.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.gov.ebserh.pacientes.dto.HistoricoDTO;
+import br.gov.ebserh.pacientes.service.PacientesService;
+
+
+
+@Path("/")
+
+//@SecuritySchemes( value = {
+//	@SecurityScheme(
+//			securitySchemeName = "apiKey", 
+//			type = SecuritySchemeType.APIKEY, 
+//			in = SecuritySchemeIn.HEADER, 
+//			apiKeyName = "X-API-KEY"				
+//			),
+//	@SecurityScheme(
+//			securitySchemeName = "access_token_sso", 
+//			type = SecuritySchemeType.HTTP, 
+//			scheme = "bearer", 
+//			bearerFormat = "jwt"
+//			)		
+//	}
+//)
+
+@Tag(name = "EBSERH Pacientes")
+@ApplicationScoped
+//@Authenticated
+public class PacientesController {
+
+	@Inject
+	Logger log;
+	
+	@Inject
+	PacientesService pacientesService;
+
+	public static final java.lang.String APPLICATION_XML_VALUE = "application/xml";
+	public static final java.lang.String APPLICATION_JSON_VALUE = "application/json";
+	public static final java.lang.String ALL_VALUE = "*/*";
+	
+	public static String getClientIpAddr(HttpServletRequest request) {  
+	    String ip = request.getHeader("X-Forwarded-For");  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("Proxy-Client-IP");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("WL-Proxy-Client-IP");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_X_FORWARDED_FOR");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_X_FORWARDED");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_CLIENT_IP");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_FORWARDED_FOR");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_FORWARDED");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("HTTP_VIA");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getHeader("REMOTE_ADDR");  
+	    }  
+	    if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {  
+	        ip = request.getRemoteAddr();  
+	    }  
+	    return ip;  
+	}	
+	
+	@GET
+	@Path("/api/v1/keepalive")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "KeepAlive da aplicação", description = "")
+	public Response teste() {
+		return Response.ok("TESTE-OK").build();
+	}
+	
+	@GET	
+	@Path("/api/v1/listarHistorico")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Lista Historicos", description = "")
+	public Response consoleApi_ListarHistorico(@QueryParam("dataInicio") String dataInicio, @QueryParam("dataFim") String dataFim) {
+		/*
+		log.info("### [INICIO] EBSERH PACIENTES listarhistorico()  ###");
+		log.info("dataInicio("+dataInicio+")");
+		log.info("dataFim("+dataFim+")");
+		
+		
+		List<HistoricoDTO> lstHistorico = pacientesService.listarHistorico(dataInicio, dataFim);
+		
+		log.info("### [FIM   ] EBSERH PACIENTES listarhistorico() ###");
+		
+		
+		return Response.status(200).entity(lstHistorico).build();
+		 */
+		return Response.status(200).build();
+	}
+	
+	@GET
+	@Path("/api/v1/lerConfiguracao")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Gravar Configuracao.", description = "Gravar Configuracao.")
+	public Response lerConfiguracao() {
+		 /*
+		log.info("### [INICIO] EBSERH PACIENTES lerConfiguracao()  ###");
+		
+		ConfiguracaoDTO configuracao = pacientesService.lerConfiguracao();
+		
+		log.info("### [FIM   ] EBSERH PACIENTES lerConfiguracao() ###");
+		
+		return Response.status(200).entity(configuracao).build();
+		*/
+		return Response.status(200).build();
+	}
+		
+	
+	@POST
+	@Path("/api/v1/gravarConfiguracao")
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Operation(summary = "Gravar Configuracao.", description = "Gravar Configuracao.")
+	public Response gravarConfiguracao(String requestBody) {
+		/*
+		ObjectMapper mapper = new ObjectMapper();
+		  
+		log.info("### [INICIO] EBSERH PACIENTES gravarConfiguracao()  ###");
+		
+		ConfiguracaoDTO configuracao = new ConfiguracaoDTO();
+		log.info("- configuracao -");
+		try {
+			configuracao = mapper.readValue(requestBody, ConfiguracaoDTO.class);
+			log.info("isDesfgBacen: " + configuracao.isDesfgBacen());
+			log.info("isDesfgMock: " + configuracao.isDesfgMock());
+			log.info("isDesfgSimulador: " + configuracao.isDesfgSimulador());
+			log.info("getDesIps: " + configuracao.getDesIps());
+			log.info("isTqsfgBacen: " + configuracao.isTqsfgBacen());
+			log.info("isTqsfgMock: " + configuracao.isTqsfgMock());
+			log.info("isTqsfgSimulador: " + configuracao.isTqsfgSimulador());
+			log.info("getTqsIps: " + configuracao.getTqsIps());
+			log.info("isHmpfgBacen: " + configuracao.isHmpfgBacen());
+			log.info("isHmpfgMock: " + configuracao.isHmpfgMock());
+			log.info("isHmpfgSimulador: " + configuracao.isHmpfgSimulador());
+			log.info("getHmpIps: " + configuracao.getHmpIps());
+			log.info("isOutrosfgBacen: " + configuracao.isOutrosfgBacen());
+			log.info("isOutrosfgMock: " + configuracao.isOutrosfgMock());
+			log.info("isOutrosfgSimulador: " + configuracao.isOutrosfgSimulador());
+			log.info("isOutrosFgIpsCadastrados: " + configuracao.isOutrosFgIpsCadastrados());
+			log.info("getMockPostInReturnCode: " + configuracao.getMockPostInReturnCode());
+			log.info("getMockPostInContent: " + configuracao.getMockPostInContent());
+			log.info("getMockGetOutStartReturnCode: " + configuracao.getMockGetOutStartReturnCode());
+			log.info("getMockGetOutStartContent: " + configuracao.getMockGetOutStartContent());
+			log.info("getMockGetOutPullNextReturnCode: " + configuracao.getMockGetOutPullNextReturnCode());
+			log.info("getMockGetOutPullNextContent: " + configuracao.getMockGetOutPullNextContent());
+			
+		} catch (JsonMappingException e) {
+			log.info("Error Mapping: " + e.getMessage());
+		} catch (JsonProcessingException e) {
+			log.info("Error Processing: " + e.getMessage());
+		}
+		
+		boolean ret = pacientesService.gravarConfiguracao(configuracao);
+		
+		log.info("### [FIM   ] EBSERH PACIENTES gravarConfiguracao() ###");
+		
+		if (ret)
+			return Response.status(200).entity("SUCESSO").build();
+		else
+			return Response.status(400).entity("ERRO").build();
+		 */
+		return Response.status(200).build();
+	}
+		
+	
+	// ---------------------------------- FRONTEND-WEB ------------------------------------------
+	
+	// O REGEX abaixo aproveita todo o subpath de WEB que é passado.
+	@GET
+	@Path("/web/{subPath:.*}")
+	public Response web(@Context UriInfo uriInfo, @PathParam("subPath") String subPath) {
+		//System.out.println("subPath: " + subPath);
+		//return Response.ok("subPath: " + subPath + "\n" + "UriInfo: " + uriInfo.getPath()).build();
+		byte[] bytes = null;
+		String mediaType = MediaType.TEXT_HTML;
+		String strResourcePath = "";
+		
+		// Aqui aponta para o documento default caso não especifique o arquivo.
+		if (subPath.equalsIgnoreCase("console"))
+			strResourcePath = "/webapp/console.html";
+		else
+			strResourcePath = "/webapp/"+subPath;
+		
+		// Scripts
+		if (subPath.toLowerCase().indexOf(".css")>0)
+			mediaType = "text/css";
+		if (subPath.toLowerCase().indexOf(".js")>0)
+			mediaType = "text/javascript";
+		// Images
+		if (subPath.toLowerCase().indexOf(".gif")>0)
+			mediaType = "image/gif";
+		if (subPath.toLowerCase().indexOf(".png")>0)
+			mediaType = "image/png";
+		if (subPath.toLowerCase().indexOf(".svg")>0)
+			mediaType = "image/svg+xml";
+		if (subPath.toLowerCase().indexOf(".jpg")>0)
+			mediaType = "image/jpg";
+		if (subPath.toLowerCase().indexOf(".bmp")>0)
+			mediaType = "image/bmp";
+		// Fonts
+		if (subPath.toLowerCase().indexOf(".ttf")>0)
+			mediaType = "application/x-font-ttf";
+		if (subPath.toLowerCase().indexOf(".otf")>0)
+			mediaType = "application/x-font-opentype";
+		if (subPath.toLowerCase().indexOf(".eot")>0)
+			mediaType = "application/vnd.ms-fontobject";
+		if (subPath.toLowerCase().indexOf(".eot")>0)
+			mediaType = "application/vnd.ms-fontobject";
+		if (subPath.toLowerCase().indexOf(".sfnt")>0)
+			mediaType = "application/font-sfnt";
+		if (subPath.toLowerCase().indexOf(".woff2")>0)
+			mediaType = "application/font-woff2";
+		
+		System.out.println("[RECURSO]: " + strResourcePath + "  (mediaType:" + mediaType + ")");
+		
+		try {
+			//bytes = IOUtils.resourceToByteArray(strResourcePath, );
+			bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(strResourcePath));
+		} catch (Exception e) {
+			System.out.println("[ERRO]: " + e.getMessage());
+		}
+		
+		return Response.status(Status.OK).type(mediaType).entity(bytes).build();
+	}
+	
+	
+
+}
+
+

@@ -1,0 +1,52 @@
+{      "cif": "01010500400430259",
+                        "coOperador": "f677192",
+                        "dtMovimento": 20230104,
+                        "icFormaAsnta": 2,
+                        "icModoAbertura": 1,
+                        "icTipoConta": 0,
+                        "noBairro": "JD SAO LUIS",
+                        "sgTipoLogradouro": "AV",
+                        "noLogradouroCta": "GUIDO CALOI",
+                        "coPosicaoImovel": 1000,
+                        "deCmpmoImovel": "bl9",
+                        "coMunicipio": "0009859",
+                        "noMunicipio": "SAO PAULO",
+                        "nuCep": "05802140",
+                        "sgUf": "SP",
+                        "nuTelefone": "035810000",
+                        "nuCanal": 1,
+                        "nuPacote": 200,
+                        "nuSegmentoOrigem": 3073,
+                        "nuUnidadeOrigem": 5,
+                        "nuUnidadeRelac": 5,
+                        "nuVersaoLeiaute": 8,
+                        "ocorrenciaPessoa": [
+                            {
+                            "cpfCnpj": "",
+                            "cocli": "",
+                            "coDocumento": "",
+                            "dtExpedicao": "",
+                            "dtIniVigencia": 20230104,
+                            "dtNascimento": ,
+                            "icMenorEmancipado": "S",
+                            "icMvmtaConta": 1,
+                            "icNomeSocial": "N",
+                            "nome": "",
+                            "nomeReduzido": "",
+                            "nuTipoDcmtoPessoa": ,
+                            "nuTipoPessoa": 1,
+                            "nuTipoPtcpo": 1,
+                            "sgOrgaoEmissor": "SSP",
+                            "tipoAssinatura": 1,
+                            "ufOrgaoEmissor": "SP"
+                            }
+                        ],
+                        "ocorrenciasCadastralImpeditiva": [
+                            {
+                            "nuOcorrenciaCadastral": 1
+                            }
+                        ],
+                        "qtdeOcorrenciaCadastralImpeditiva": 1,
+                        "qtdePessoa": 1
+                }
+   }

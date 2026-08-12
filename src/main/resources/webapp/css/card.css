@@ -1,0 +1,44 @@
+.card {
+	height: 72px;
+    border: 1px solid #3077ba;
+    border-left: 10px solid #3077ba;
+    background-color: #fff;
+    width: 366px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;	
+}
+
+.card-background {
+	background-color: #fff;
+	border: 1px solid #bbb;
+		
+}
+
+.card-postagem {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	margin-left: 25px;	
+}
+
+.card-comentarios {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	margin-left: 45px;
+	margin-bottom: 15px;	
+}
+
+.card-comentario-individual {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	margin-left: 85px;
+	margin-bottom: 15px;	
+}
+
+.card-relacionados {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	margin-left: 45px;
+	text-align: center;	
+}

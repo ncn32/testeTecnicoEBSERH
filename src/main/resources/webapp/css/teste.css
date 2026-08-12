@@ -1,0 +1,98 @@
+/* It's supposed to look like a tree diagram */
+.tree, .tree ul, .tree li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+.tree {
+	margin: 0 0 1em;
+	text-align: center;
+}
+
+.tree, .tree ul {
+	display: table;
+	margin: auto;
+	padding-bottom: 86px;
+}
+
+.tree ul {
+	width: 100%;
+}
+
+.tree li {
+	display: table-cell;
+	padding: .5em 20px;
+	vertical-align: top;
+}
+/* _________ */
+.tree li:before {
+	outline: solid 1px #ccc;
+	content: "";
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.tree li:first-child:before {
+	left: 50%;
+}
+
+.tree li:last-child:before {
+	right: 50%;
+}
+
+.tree code, .tree span {
+	border: solid .1em #666;
+	border-radius: .2em;
+	display: inline-block;
+	margin: 0 .2em .5em;
+	padding: 0.8em 1.5em;
+	padding-right: 30px;
+	position: relative;
+	border: 1px solid #ccc;
+	box-shadow: 0 3px 5px 0 #54b4ab;
+	text-decoration: none;
+	color: #666;
+}
+/* If the tree represents DOM structure */
+.tree code {
+	font-family: monaco, Consolas, 'Lucida Console', monospace;
+}
+
+/* | */
+.tree ul:before, .tree code:before, .tree span:before {
+	outline: solid 1px #ccc;
+	content: "";
+	height: .5em;
+	left: 50%;
+	position: absolute;
+}
+
+.tree ul:before {
+	top: -.5em;
+}
+
+.tree code:before, .tree span:before {
+	top: -.55em;
+}
+
+/* The root node doesn't connect upwards */
+.tree>li {
+	margin-top: 0;
+}
+
+.tree>li:before, .tree>li:after, .tree>li>code:before, .tree>li>span:before
+	{
+	outline: none;
+}
+
+.organograma-info {
+	float: none;
+	margin-top: 4px;
+	position: absolute;
+	right: 8px;
+	top: 10px;
+}

@@ -1,0 +1,1025 @@
+<!doctype html>
+
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EBSERH-PACIENTES</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<!-- Place favicon.ico in the root directory -->
+
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/bootstrap-grid.css">
+<link rel="stylesheet" href="./css/dashboard.css">
+
+<link rel="stylesheet" href="./css/all.css">
+<link rel="stylesheet" href="./css/main.css">
+<link rel="stylesheet" href="./css/complemento.css">
+<link rel="stylesheet" href="./css/jquery-menu-lateral.css">
+<style>
+	.gutter {
+		background-color: #eee;
+		background-repeat: no-repeat;
+		background-position: 50%;
+	}
+
+	.gutter.gutter-horizontal {
+		background-image: url('splitjs/gripv.png');
+		cursor: ew-resize;
+	}
+
+	.gutter.gutter-vertical {
+		background-image: url('splitjs/griph.png');
+		cursor: ns-resize;
+	}
+
+	.split.split-horizontal, .gutter.gutter-horizontal {
+		height: 100%;
+		float: left;
+	}
+
+</style>
+
+
+</head>
+
+<body class="dx-viewport">
+	
+	<div id="divLoading" style="position:absolute;left:0; top:0; width: 100%; height: 100%; z-index: 255; background: rgba(0,0,0,.7); visibility:visible;">
+		<img src="loading_cmp.gif" height="42" width="42" style="position:absolute;display: block; left: 50%; top: 50%;">
+	</div>
+
+	<div class="navbar-fixed-top">
+		<!-- ===================== topo ==================== -->
+		<div class="container-fluid header-top hidden-xs hidden-sm">
+			<div class="header container logo_pessoas">
+				<a href=""> <img
+					src="./images/logo_pix.png" alt="ebserh">
+				</a>
+				<div class="acoes_header">
+					<!-- <a href="../StyleLibrary/busca.html" class="btn btn_configuracoes"></a>  -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div id="divGeral" name="divGeral" class="container-fluid" style="width: 90%; visibility:hidden;">
+		<br>
+		<span>- Modalidade</span>
+		<br>
+		<div class="row">
+			<ul class="nav nav-tabs">
+			  <li class="nav-item">
+				<a class="nav-link active" data-toggle="tab" href="#tabMock" onclick="javascript: onclickTabMock();">&nbsp;&nbsp;&nbsp;&nbsp;MOCK&nbsp;</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" data-toggle="tab" href="#tabBacen" onclick="javascript: onclickTabBacen();">&nbsp;&nbsp;&nbsp;&nbsp;BACEN&nbsp;</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link disabled" data-toggle="tab" href="#tabSimulador" onclick="javascript: onclickTabSimulador();">&nbsp;&nbsp;&nbsp;&nbsp;SIMULADOR&nbsp;</a>
+			  </li>
+			</ul>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button type="button" id="btnAtualizar" class="btn btn-secondary" style="height: 38px;" onclick="javascript: btnAtualizarClick();">&nbsp;&nbsp;Atualizar&nbsp;&nbsp;</button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button type="button" id="btnDisparar" class="btn btn-success" data-toggle="modal" data-target="#modalDisparar" style="height: 38px;" onclick="javascript: btnDispararClick();">&nbsp;&nbsp;Disparar&nbsp;&nbsp;</button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button type="button" id="btnConfigurar" class="btn btn-primary" data-toggle="modal" data-target="#modalConfigurar" style="height: 38px;" onclick="javascript: btnConfigurarClick();">&nbsp;&nbsp;Configurar&nbsp;&nbsp;</button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button type="button" id="btnTestar" class="btn btn-secondary" style="height: 38px;" onclick="javascript: btnTestarClick();">&nbsp;&nbsp;Testar&nbsp;&nbsp;</button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<div class="container-fluid">
+			  <div class="tab-content">
+				<!-- ****************************** MOCK ****************************** -->
+				<div role="tabpanel" class="tab-pane fade in active show" id="tabMock">
+					<div id="divLoadingMock" style="display: flex; left:0; top:0; width: 100%; height: 100%; z-index: 255; background: rgba(0,0,0,.7); visibility:hidden;">
+						<img src="loading_circle.gif" height="42" width="42" style="position:absolute;display: block; left: 50%; top: 50%;">
+					</div>
+					<br>
+					<br>
+					<table style="width: 100%;">
+						<tbody>
+							<tr>
+								<td class = "data-origins" style="width: 50%; max-height: 300px; vertical-align: top;">
+									<label id="headerXmlMockContent" for="gridHistoricoMock">Histórico:</label>
+									<div class="col-12">
+											<table class="table table-bordered table-striped">
+												<thead>
+													<tr>
+														<th scope="col">Id</th>
+														<th scope="col">Origem</th>
+														<th scope="col">Data-Hora-Requisição</th>
+														<th scope="col">Data-Hora-Resposta</th>
+													</tr>
+												</thead>
+												<tbody id="gridHistoricoMock">
+													<!-- ITENS MOCK --->
+												</tbody>
+											</table>
+
+									</div>
+								</td>
+								<td style="vertical-align: top;">
+									  <div><b>[POST] /api/v1/in/{ispb}/msgs:</b></div>
+									  <div class="input-group mb-2">
+											<div class="input-group-prepend">
+												<div class="input-group-text" style="min-width: 110px;">Return Code:</div>
+											</div>
+											<input type="number" id="textMockInMsgsReturnCode" style="width: 80px; text-align: center;" placeholder="">
+											&nbsp;&nbsp;&nbsp;
+											<div class="input-group-prepend">
+												<div class="input-group-text" style="min-width: 110px;">Content:</div>
+											</div>
+											<input type="text" class="form-control" id="textMockInMsgsContent" placeholder="">
+									  </div>
+									  <br>
+									  <div><b>[GET] /api/v1/out/{ispb}/stream/start:</b></div>
+									  <div class="input-group mb-2">
+											<div class="input-group-prepend">
+												<div class="input-group-text" style="min-width: 110px;">Return Code:</div>
+											</div>
+											<input type="number" id="textMockOutStreamStartReturnCode" style="width: 80px; text-align: center;" placeholder="">
+									  </div>
+									  <div class="input-group mb-2">
+											<div class="input-group-prepend">
+												<div class="input-group-text" style="min-width: 110px;">Content:</div>
+											</div>
+											<textarea class="form-control" id="textMockOutStreamStartContent" spellcheck="false" style="min-height: 80px; font-family: monospace,monospace;"></textarea>
+									  </div>
+									  <br>
+									  <div><b>[GET] /api/v1/out/{ispb}/stream/{piPullNext}:</b></div>
+									  <div class="input-group mb-2">
+											<div class="input-group-prepend">
+												<div class="input-group-text">Return Code:</div>
+											</div>
+											<input type="number" id="textMockOutStreamPiPullNextReturnCode" style="width: 80px; text-align: center;" placeholder="">
+									  </div>
+									  <div class="input-group mb-2">
+											<div class="input-group-prepend">
+												<div class="input-group-text" style="min-width: 110px;">Content:</div>
+											</div>
+											<textarea class="form-control" id="textMockOutStreamPiPullNextContent" spellcheck="false" style="min-height: 80px; font-family: monospace,monospace;"></textarea>
+									  </div>
+									  <button type="button" id="btnAplicarMock" class="btn btn-primary" style="height: 38px;" onclick="javascript: btnAplicarOnClick();">&nbsp;&nbsp;Aplicar&nbsp;&nbsp;</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- ****************************** BACEN ****************************** -->
+				<div role="tabpanel" class="tab-pane fade" id="tabBacen">
+					<br>
+					<br>
+					<table style="width: 100%;">
+						<tbody>
+							<tr>
+								<td style="width: 50%; vertical-align: top;">
+									<label id="headerXmlBacenContent" for="gridHistoricoBacen">Histórico:</label>
+									<div class="col-12">
+											<div id="divLoadingBacen" style="display: flex; left:0; top:0; width: 100%; height: 100%; z-index: 255; background: rgba(0,0,0,.7); visibility:hidden;">
+												<img src="loading_circle.gif" height="42" width="42" style="position:absolute;display: block; left: 50%; top: 50%;">
+											</div>
+											<table class="table table-bordered table-striped">
+												<thead>
+													<tr>
+														<th scope="col">Id</th>
+														<th scope="col">Origem</th>
+														<th scope="col">Data-Hora-Requisição</th>
+														<th scope="col">Data-Hora-Resposta</th>
+													</tr>
+												</thead>
+												<tbody id="gridHistoricoBacen">
+													<!-- ITENS BACEN --->
+												</tbody>
+											</table>
+									</div>
+								</td>
+								<td style="width: 50%;">
+									<table style="width: 100%;">
+										<tr>
+											<td style="width: 50%;">
+												<label id="labelBacenRequisicao" for="textBacenRequisicao">Requisição:</label>
+												<br>
+												<textarea id="textBacenRequisicao" rows="10" style="width: 100%; background-color: lightgrey;" readonly></textarea>
+											</td>
+											<td style="width: 50%;">
+												<label id="labelBacenResposta" for="textBacenResposta">Resposta:</label>
+												<br>
+												<textarea id="textBacenResposta" rows="10" style="width: 100%; background-color: lightgrey;" readonly></textarea>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- ****************************** SIMULADOR ****************************** -->
+				<div role="tabpanel" class="tab-pane fade" id="tabSimulador">
+					<br>
+					<br>
+					<table style="width: 100%;">
+						<tbody>
+							<tr>
+								<td style="width: 35%; vertical-align: top;">
+									<label id="headerXmlSimuladorContent" for="gridHistoricoSimulador">Histórico:</label>
+									<div class="col-12">
+											<div id="divLoadingSimulador" style="display: flex; left:0; top:0; width: 100%; height: 100%; z-index: 255; background: rgba(0,0,0,.7); visibility:hidden;">
+												<img src="loading_circle.gif" height="42" width="42" style="position:absolute;display: block; left: 50%; top: 50%;">
+											</div>
+											<table class="table table-bordered table-striped">
+												<thead>
+													<tr>
+														<th scope="col">Origem</th>
+														<th scope="col">Data-Hora</th>
+														<th scope="col">Tipo de chamada</th>
+													</tr>
+												</thead>
+												<tbody id="gridHistoricoSimulador">
+													<!-- ITENS MOCK --->
+												</tbody>
+											</table>
+									</div>
+								</td>
+								<td style="width: 30%;">
+									<div style="height: 50%;">
+										<label id="headerXmlSimuladorContent" for="textXmlSimulador">Requisição:</label>
+										<br>
+										<textarea id="textXmlSimulador" rows="10" style="width: 100%; background-color: lightgrey;" readonly></textarea>
+									</div>
+									<div style="height: 50%;">
+										<label id="headerXmlSimuladorContent" for="textXmlSimulador">Resposta:</label>
+										<br>
+										<textarea id="textXmlSimulador" rows="10" style="width: 100%; background-color: lightgrey;" readonly></textarea>
+									</div>
+								</td>
+								<td style="width: 35%; vertical-align: top;">
+									&nbsp;&nbsp;
+									<label id="headerXmlSimuladorContent" for="gridHistoricoSimuladorDados">Dados da Simulação:</label>
+									&nbsp;&nbsp;
+									<button type="button" id="btnAplicarSimulador" class="btn btn-primary" style="height: 36px;" data-toggle="modal" data-target="#modalSimulador">&nbsp;Adicionar&nbsp;</button>
+									<div class="col-12">
+										<br>
+										<table class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th scope="col">Conta</th>
+													<th scope="col">Instituição</th>
+													<th scope="col">Saldo</th>
+													<th scope="col">Ação</th>
+												</tr>
+											</thead>
+											<tbody id="gridHistoricoSimuladorDados">
+												<!-- ITENS SIMULADOR --->
+											</tbody>
+										</table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			  </div>
+			</div>		
+		</div>
+	</div>
+	
+	<div class="footer">
+		<a href=""> <img
+			src="./images/logo_ebserh.png" alt="ebserh">
+		</a>
+		<a href="/index.html" class="logo"> </a>
+	</div>
+
+	<!-- Modal Login -->
+	<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLoginLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="modalLoginLabel">Login</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				 <form id="FormLogin" name="FormLogin" onsubmit="event.preventDefault(); return false;">
+						<div class="input-group mb-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text" style="width: 120px;">Usuário:</div>
+							</div>
+							<input type="text" class="form-control" id="modalLoginUsuario">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text" style="width: 120px;">Senha:</div>
+							</div>
+							<input type="password" class="form-control" id="modalLoginSenha">
+						</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript: onClickLogin();">&nbsp;&nbsp;&nbsp;Acessar&nbsp;&nbsp;&nbsp;</button>
+			  <!--<button type="button" class="btn btn-secondary" data-dismiss="modal" >Cancelar</button>-->
+			</div>
+		  </div>
+		</div>
+	</div>	
+	   
+	<!-- Modal DISPARAR -->
+	<div class="modal fade" id="modalDisparar" tabindex="-1" role="dialog" aria-labelledby="modalDispararLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="modalDispararLabel" >Disparar</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				  <div class="form-check" style="vertical-align: middle; text-align: left; margin-left: -12px;">
+					  <label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalDispararMetodo" id="modalDispararPOST">&nbsp;POST</label>
+					  &nbsp;&nbsp;&nbsp;&nbsp;
+					  <label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalDispararMetodo" id="modalDispararGET">&nbsp;GET</label>
+				  </div>
+				  <br>
+				  <span><b>Conteúdo:</b></span>
+				  <textarea id="modalDispararConteudo" rows="10" cols="4" style="width: 100%; font-family: monospace,monospace;"></textarea>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript: onClickDispararOK();">Enviar</button>
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			</div>
+		  </div>
+		</div>
+	</div>	
+  
+	<!-- Modal CONFIGURAR -->
+	<div class="modal fade" id="modalConfigurar" tabindex="-1" role="dialog" aria-labelledby="modalConfigurarLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h5 class="modal-title" id="modalConfigurarLabel" >Configurar</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div class="modal-body">
+				  <div class="form-group">
+					  <label class="radio-inline" style="cursor: pointer;">
+							<input type="radio" name="modalConfigurarBacen" id="modalConfigurarDesBacen" onclick="javascript: onClickModoBacenSel();">
+							&nbsp;BACEN-DES
+					  </label>
+					  <div class="input-group mb-2">
+						  <div class="input-group-prepend">
+							  <div class="input-group-text">- IPs DES:</div>
+						  </div>
+						  <input type="text" class="form-control" id="textIPsDes" placeholder="">
+					  </div>
+					  &nbsp;&nbsp;&nbsp;&nbsp;
+					  <div class="form-check" id="modalConfigurarIpsDesSel" style="vertical-align: middle; text-align: left;">
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalConfigurarDes" id="modalConfigurarDesMock">&nbsp;Mock</label>
+						  &nbsp;&nbsp;&nbsp;&nbsp;
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" disabled name="modalConfigurarDes" id="modalConfigurarDesSimulador">&nbsp;Simulador</label>
+					  </div>
+					  <span style="display: block; height: 1px; border: 0; border-top: 1px solid gray; margin: 1em 0; padding: 0;"></span>
+				  </div>
+				  <div class="form-group">
+						<label class="radio-inline" style="cursor: pointer;">
+							<input type="radio" name="modalConfigurarBacen" id="modalConfigurarTqsBacen" onclick="javascript: onClickModoBacenSel();">
+							&nbsp;BACEN-TQS
+						</label>
+						<div class="input-group mb-2">
+						  <div class="input-group-prepend">
+							  <div class="input-group-text">- IPs TQS:</div>
+						  </div>
+						  <input type="text" class="form-control" id="textIPsTqs" placeholder="">
+					  </div>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+					  <div class="form-check" id="modalConfigurarIpsTqsSel" style="vertical-align: middle; text-align: left;">
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalConfigurarTqs" id="modalConfigurarTqsMock">&nbsp;Mock</label>
+						  &nbsp;&nbsp;&nbsp;&nbsp;
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" disabled name="modalConfigurarTqs" id="modalConfigurarTqsSimulador">&nbsp;Simulador</label>
+					  </div>
+					  <span style="display: block; height: 1px; border: 0; border-top: 1px solid gray; margin: 1em 0; padding: 0;"></span>
+				  </div>
+				  <div class="form-group">
+					<label class="radio-inline" style="cursor: pointer;">
+						<input type="radio" name="modalConfigurarBacen" id="modalConfigurarHmpBacen" onclick="javascript: onClickModoBacenSel();">
+						&nbsp;BACEN-HMP
+					</label>
+					<div class="input-group mb-2">
+						  <div class="input-group-prepend">
+							  <div class="input-group-text">- IPs HMP:</div>
+						  </div>
+						  <input type="text" class="form-control" id="textIPsHmp" placeholder="">
+					  </div>
+					  &nbsp;&nbsp;&nbsp;&nbsp;
+					  <div class="form-check" id="modalConfigurarIpsHmpSel" style="vertical-align: middle; text-align: left;">
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalConfigurarHmp" id="modalConfigurarHmpMock">&nbsp;Mock</label>
+						  &nbsp;&nbsp;&nbsp;&nbsp;
+						  <label class="radio-inline" style="cursor: pointer;"><input type="radio" disabled name="modalConfigurarHmp" id="modalConfigurarHmpSimulador">&nbsp;Simulador</label>
+					  </div>
+					  <span style="display: block; height: 1px; border: 0; border-top: 1px solid gray; margin: 1em 0; padding: 0;"></span>
+				  </div>
+				  <div class="form-group">
+					  <div class="form-check">
+						  <label class="form-check-label" style="cursor: pointer;">
+							<input class="form-check-input" type="checkbox" value="" id="modalConfigurarCheckIPsCadastrados" onclick="javascript: onClickCheckBoxIPsCadastrados();">
+							&nbsp;Aceitar somente IPs cadastrados
+						</label>
+					  </div>
+					  <br>
+					  <div class="input-group mb-2" id="modalConfigurarOutrosIPs">
+							<div class="input-group-prepend" style="height: 40px;">
+								<div class="input-group-text">- Outros IPs:</div>
+							</div>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<div style="display: block; height: 20px; margin: 1em 0; padding: 0;">
+								<label class="radio-inline" style="cursor: pointer;">
+									<input type="radio" name="modalConfigurarBacen" id="modalConfigurarOutrosBacen" onclick="javascript: onClickModoBacenSel();">
+									&nbsp;BACEN-Outros
+								</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>|</span>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<span id="modalConfigurarIpsOutrosSel">
+									<label class="radio-inline" style="cursor: pointer;"><input type="radio" name="modalConfigurarOutros" id="modalConfigurarOutrosMock">&nbsp;Mock</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<label class="radio-inline" style="cursor: pointer;"><input type="radio" disabled name="modalConfigurarOutros" id="modalConfigurarOutrosSimulador">&nbsp;Simulador</label>
+								</span>
+							</div>
+					  </div>
+					  <span style="display: block; height: 1px; border: 0; border-top: 1px solid gray; margin: 1em 0; padding: 0;"></span>
+				  </div>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript: modalConfigurarOKClick();">Salvar</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="javascript: modalConfigurarCancelarClick();">Cancelar</button>
+			  </div>
+			</div>
+		  </div>
+	</div>	
+	
+	<!-- Modal Simulador -->
+	<div class="modal fade" id="modalSimulador" tabindex="-1" role="dialog" aria-labelledby="modalSimuladorLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h5 class="modal-title" id="modalSimuladorLabel" >Simulador</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				</div>
+				<div class="modal-body">
+					<div class="input-group mb-2 mr-sm-2">
+					  	<div class="input-group-prepend">
+							<div class="input-group-text" style="width: 120px;">Conta:</div>
+					  	</div>
+					  	<input type="text" class="form-control" id="inlineFormInputGroupConta">
+					</div>
+					<div class="input-group mb-2 mr-sm-2">
+						<div class="input-group-prepend">
+							<div class="input-group-text" style="width: 120px;">Instituição:</div>
+						</div>
+						<input type="text" class="form-control" id="inlineFormInputGroupInstituicao">
+					</div>
+					<div class="input-group mb-2 mr-sm-2">
+						<div class="input-group-prepend">
+							<div class="input-group-text" style="width: 120px;">Saldo:</div>
+						</div>
+						<input type="text" class="form-control" id="inlineFormInputGroupSaldo">
+					</div>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Adicionar</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				</div>
+			</div>
+			</div>
+	</div>	
+	
+  
+
+	<!-- js -->
+	<script src="./js/lib/modernizr.custom.js"></script>
+	<script src="./js/lib/jquery.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<script src="./js/bootstrap.bundle.min.js"></script>
+	<script src="./js/jquery-menu-lateral.js"></script>
+	<script src="./js/lib/jquery.dlmenu.js"></script>
+	<script src="./js/codeflask.min.js"></script>
+
+	
+	<script>
+		var fgLoadingGeral = true;
+		var fgModalConfigurar = false;
+
+		var Configuracao = {desfgBacen: false,
+							desfgMock: false,
+							desfgSimulador: false,
+							desIps: "",
+							//
+							tqsfgBacen: false,
+							tqsfgMock: false,
+							tqsfgSimulador: false,
+							tqsIps: "",
+							//
+							hmpfgBacen: false,
+							hmpfgMock: false,
+							hmpfgSimulador: false,
+							hmpIps: "",
+							//
+							outrosfgBacen: false,
+							outrosfgMock: false,
+							outrosfgSimulador: false,
+							outrosFgIpsCadastrados: false,
+							//
+							mockPostInReturnCode: 200,
+							mockPostInContent: "",
+							mockGetOutStartReturnCode: 200,
+							mockGetOutStartContent: "",
+							mockGetOutPullNextReturnCode: 200,
+							mockGetOutPullNextContent: ""
+							};
+		var DispararRequisicao = {metodo: "POST", conteudo: "XXXX YYY ZZZZ"};
+		var DispararResposta = {statusCode: 0, conteudo: "XXXX YYY ZZZZ", milisegundos: 0};
+		
+		// ------------------ LOGIN -------------------
+		var acessoUsuario = "";
+		var acessoNome = "";
+		var fgAcessoAdmin = "0";
+
+		var fgTabMock = true;
+		var fgTabBacen = false;
+		var fgTabSimulador = false;
+		
+		function loadingGeralExibir(){
+			fgLoadingGeral = true;
+			document.getElementById("divLoading").style.visibility = "visible";
+		}
+
+		function loadingGeralEsconder(){
+			document.getElementById("divLoading").style.visibility = "hidden";
+			fgLoadingGeral = false;
+		}
+	
+		var formLogin = null;
+		function onClickLogin() {
+			loadingGeralExibir();
+			//
+			localStorage.setItem("painelSquadsUsuario", $('#editLoginUsuario').val());
+			localStorage.setItem("painelSquadsNome", "");
+			localStorage.setItem("painelSquadsAdmin", true);
+			acessoUsuario = localStorage.getItem("painelSquadsUsuario");
+			acessoNome = localStorage.getItem("painelSquadsNome");
+			fgAcessoAdmin = localStorage.getItem("painelSquadsAdmin");
+			setTimeout(function(){
+				document.getElementById("divGeral").style.visibility = "visible";
+				lerConfiguracao();
+				//loadingGeralEsconder();
+				btnAtualizarClick();
+			}, 1250);
+			//
+		}
+
+
+		 
+		function efetuarLogout(){
+			localStorage.setItem("painelSquadsUsuario", "");
+			localStorage.setItem("painelSquadsNome", "");
+			window.location.reload(false);
+		}
+		
+		// ------------ MODAL DISPARAR ----------
+		var modalDisparar = null;
+		var fgModalDisparar = false;
+		function limparDisparar() {
+			$("#editDispararNome").val("");
+			$("#editDispararDescricao").val("");
+			
+			$('#checkBoxDispararAtiva').prop("checked", false);
+			$("#labelDispararAtiva").removeClass('ui-checkboxradio-checked');
+			$("#labelDispararAtiva").removeClass('ui-state-active');
+		}
+
+		function onclickTabMock(){
+			fgTabMock = true;
+			fgTabBacen = false;
+			fgTabSimulador = false;
+			btnAtualizarClick();
+		}
+
+		function onclickTabBacen(){
+			fgTabMock = false;
+			fgTabBacen = true;
+			fgTabSimulador = false;
+			btnAtualizarClick();
+		}
+
+		function onclickTabSimulador(){
+			fgTabMock = false;
+			fgTabBacen = false;
+			fgTabSimulador = true;
+			btnAtualizarClick();
+		}
+
+		function btnAtualizarClick(){
+			//document.getElementById("divLoadingMock").style.visibility = "visible";
+			//testeBackend();
+			loadingGeralExibir();
+			if (fgTabMock)
+				listarHistoricoMock("2021-01-01", "2022-08-23");
+			else if (fgTabBacen)
+				listarHistoricoBacen("2021-01-01", "2022-08-23");
+			else if (fgTabSimulador)
+				listarHistoricoSimulador("2021-01-01", "2022-08-23");
+			setTimeout(function(){
+				loadingGeralEsconder();
+			}, 1250);
+		}
+	 
+		function btnDispararClick() {
+			fgModalDisparar = true;
+			limparDisparar();
+			//$("#gridDisparars").dxDataGrid({dataSource: dadosTeste});
+			
+		}
+
+		function onClickDispararOK(){
+			loadingGeralExibir();
+			if ($('#modalDispararPOST').prop("checked"))
+				DispararRequisicao.metodo = "POST";
+			if ($('#modalDispararGET').prop("checked"))
+				DispararRequisicao.metodo = "GET";
+			DispararRequisicao.conteudo = $("#modalDispararConteudo").val();
+			var strDispararRequisicao = JSON.stringify(DispararRequisicao);
+			$("#textBacenRequisicao").val($("#modalDispararConteudo").val());
+			$.ajax({
+				url: "../consoleapi/disparar",
+				method: "POST",
+				dataType: "JSON",
+				//processData: false,
+				contentType: "application/json; charset=utf-8",
+				data: strDispararRequisicao,
+				success: function (ret) {
+					DispararResposta = ret;
+					$("#textBacenResposta").val(DispararResposta.conteudo + "\n\n" + "- tempo: " + DispararResposta.milisegundos + "ms");
+					btnAtualizarClick();
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					loadingGeralEsconder();
+				}
+			});
+		}
+
+		function btnTestarClick(){
+			//testeBackend();
+			loadingGeralExibir();
+			lerConfiguracao();
+			setTimeout(function(){
+				loadingGeralEsconder();
+			}, 1250);
+		}
+
+		function btnAplicarOnClick(){
+			loadingGeralExibir();
+			//
+			Configuracao.mockPostInReturnCode = parseInt($("#textMockInMsgsReturnCode").val());
+			Configuracao.mockPostInContent = $("#textMockInMsgsContent").val();
+			Configuracao.mockGetOutStartReturnCode = parseInt($("#textMockOutStreamStartReturnCode").val());
+			Configuracao.mockGetOutStartContent = $("#textMockOutStreamStartContent").val();
+			Configuracao.mockGetOutPullNextReturnCode = parseInt($("#textMockOutStreamPiPullNextReturnCode").val());
+			Configuracao.mockGetOutPullNextContent = $("#textMockOutStreamPiPullNextContent").val();
+			//
+			setTimeout(function(){
+				gravarConfiguracao();
+			}, 1250);
+
+		}
+
+		// ------------ MODAL CONFIGURAR ----------
+		function  onClickModoBacenSel(){
+			if ($('#modalConfigurarDesBacen').prop("checked")){
+				document.getElementById("modalConfigurarIpsDesSel").style.display = "none";
+				document.getElementById("modalConfigurarIpsTqsSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsHmpSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsOutrosSel").style.display = "inline";
+			}
+			else if ($('#modalConfigurarTqsBacen').prop("checked")){
+				document.getElementById("modalConfigurarIpsDesSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsTqsSel").style.display = "none";
+				document.getElementById("modalConfigurarIpsHmpSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsOutrosSel").style.display = "inline";
+			}
+			else if ($('#modalConfigurarHmpBacen').prop("checked")){
+				document.getElementById("modalConfigurarIpsDesSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsTqsSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsHmpSel").style.display = "none";
+				document.getElementById("modalConfigurarIpsOutrosSel").style.display = "inline";
+			}
+			else if ($('#modalConfigurarOutrosBacen').prop("checked")){
+				document.getElementById("modalConfigurarIpsDesSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsTqsSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsHmpSel").style.display = "block";
+				document.getElementById("modalConfigurarIpsOutrosSel").style.display = "none";
+
+			}
+		}
+
+		function onClickCheckBoxIPsCadastrados(){
+			if (document.getElementById('modalConfigurarCheckIPsCadastrados').checked)
+				document.getElementById('modalConfigurarOutrosIPs').style.display='none';
+			else
+				document.getElementById('modalConfigurarOutrosIPs').style.display='';
+		}
+	 
+		function btnConfigurarClick() {
+			loadingGeralExibir();
+			fgModalConfigurar = true;
+			lerConfiguracao();
+			//$("#gridConfigurars").dxDataGrid({dataSource: dadosTeste});
+			//
+		}
+
+		function atualizarModalConfguracao(){
+			$('#modalConfigurarDesBacen').prop("checked", Configuracao.desfgBacen);
+			$('#modalConfigurarDesMock').prop("checked", Configuracao.desfgMock);
+			$('#modalConfigurarDesSimulador').prop("checked", Configuracao.desfgSimulador);
+			$('#textIPsDes').val(Configuracao.desIps);
+			//
+			$('#modalConfigurarTqsBacen').prop("checked", Configuracao.tqsfgBacen);
+			$('#modalConfigurarTqsMock').prop("checked", Configuracao.tqsfgMock);
+			$('#modalConfigurarTqsSimulador').prop("checked", Configuracao.tqsfgSimulador);
+			$('#textIPsTqs').val(Configuracao.tqsIps);
+			//
+			$('#modalConfigurarHmpBacen').prop("checked", Configuracao.hmpfgBacen);
+			$('#modalConfigurarHmpMock').prop("checked", Configuracao.hmpfgMock);
+			$('#modalConfigurarHmpSimulador').prop("checked", Configuracao.hmpfgSimulador);
+			$('#textIPsHmp').val(Configuracao.hmpIps);
+			//
+			$('#modalConfigurarCheckIPsCadastrados').prop("checked", Configuracao.outrosFgIpsCadastrados);
+			$('#modalConfigurarOutrosBacen').prop("checked", Configuracao.outrosfgBacen);
+			$('#modalConfigurarOutrosMock').prop("checked", Configuracao.outrosfgMock);
+			$('#modalConfigurarOutrosSimulador').prop("checked", Configuracao.outrosfgSimulador);
+		}
+
+		function modalConfigurarOKClick() {
+			loadingGeralExibir();
+			fgModalConfigurar = false;
+			//
+			if ($('#modalConfigurarDesBacen').prop("checked")) Configuracao.desfgBacen = true; else Configuracao.desfgBacen = false;
+			if ($('#modalConfigurarDesMock').prop("checked")) Configuracao.desfgMock = true; else Configuracao.desfgMock = false;
+			if ($('#modalConfigurarDesSimulador').prop("checked")) Configuracao.desfgSimulador = true; else Configuracao.desfgSimulador = false;
+			Configuracao.desIps = $("#textIPsDes").val();
+			//
+			if ($('#modalConfigurarTqsBacen').prop("checked")) Configuracao.tqsfgBacen = true; else Configuracao.tqsfgBacen = false;
+			if ($('#modalConfigurarTqsMock').prop("checked")) Configuracao.tqsfgMock = true; else Configuracao.tqsfgMock = false;
+			if ($('#modalConfigurarTqsSimulador').prop("checked")) Configuracao.tqsfgSimulador = true; else Configuracao.tqsfgSimulador = false;
+			Configuracao.tqsIps = $("#textIPsTqs").val();
+			//
+			if ($('#modalConfigurarHmpBacen').prop("checked")) Configuracao.hmpfgBacen = true; else Configuracao.hmpfgBacen = false;
+			if ($('#modalConfigurarHmpMock').prop("checked")) Configuracao.hmpfgMock = true; else Configuracao.hmpfgMock = false;
+			if ($('#modalConfigurarHmpSimulador').prop("checked")) Configuracao.hmpfgSimulador = true; else Configuracao.hmpfgSimulador = false;
+			Configuracao.hmpIps = $("#textIPsHmp").val();
+			//
+			if ($('#modalConfigurarCheckIPsCadastrados').prop("checked")) Configuracao.outrosFgIpsCadastrados = true; else Configuracao.outrosFgIpsCadastrados = false;
+			if ($('#modalConfigurarOutrosBacen').prop("checked")) Configuracao.outrosfgBacen = true; else Configuracao.outrosfgBacen = false;
+			if ($('#modalConfigurarOutrosMock').prop("checked")) Configuracao.outrosfgMock = true; else Configuracao.outrosfgMock = false;
+			if ($('#modalConfigurarOutrosSimulador').prop("checked")) Configuracao.outrosfgSimulador = true; else Configuracao.outrosfgSimulador = false;
+			//
+			Configuracao.mockPostInReturnCode = parseInt($("#textMockInMsgsReturnCode").val());
+			Configuracao.mockPostInContent = $("#textMockInMsgsContent").val();
+			Configuracao.mockGetOutStartReturnCode = parseInt($("#textMockOutStreamStartReturnCode").val());
+			Configuracao.mockGetOutStartContent = $("#textMockOutStreamStartContent").val();
+			Configuracao.mockGetOutPullNextReturnCode = parseInt($("#textMockOutStreamPiPullNextReturnCode").val());
+			Configuracao.mockGetOutPullNextContent = $("#textMockOutStreamPiPullNextContent").val();
+			//
+			gravarConfiguracao();
+		}
+	 
+		function modalConfigurarCancelarClick() {
+			fgModalConfigurar = false;
+		}
+
+		// ---------------------------------- OnLoad -------------------------------
+		//Quando HTML + elementos + imagens carregados.
+		window.onload = function(){
+			//
+			loadingGeralExibir();
+			//
+			setTimeout(function(){
+				loadingGeralEsconder();
+				$('#modalLogin').modal('show');
+				setTimeout(function(){document.getElementById("modalLoginUsuario").focus();}, 550);
+			}, 1250);
+			//
+		}
+		
+
+		function lerConfiguracao(){
+			$.ajax({
+				url: "../consoleapi/lerConfiguracao",
+				method: "GET",
+				data: {},
+				//dataType: "xml",
+				//dataType: "text",
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function (ret) {
+					loadingGeralEsconder();
+					if (ret==null)
+						return;
+					//
+					Configuracao = ret;
+					//
+					$("#textMockInMsgsReturnCode").val(""+Configuracao.mockPostInReturnCode);
+					$("#textMockInMsgsReturnCode").val(""+Configuracao.mockPostInReturnCode);
+					$("#textMockInMsgsContent").val(""+Configuracao.mockPostInContent);
+					$("#textMockOutStreamStartReturnCode").val(""+Configuracao.mockGetOutStartReturnCode);
+					$("#textMockOutStreamStartContent").val(""+Configuracao.mockGetOutStartContent);
+					$("#textMockOutStreamPiPullNextReturnCode").val(""+Configuracao.mockGetOutPullNextReturnCode);
+					$("#textMockOutStreamPiPullNextContent").val(""+Configuracao.mockGetOutPullNextContent);
+					//
+					if (fgModalConfigurar){
+						setTimeout(function(){
+							atualizarModalConfguracao();
+							onClickModoBacenSel();
+							onClickCheckBoxIPsCadastrados();
+						}, 250);
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					loadingGeralEsconder();
+				}
+				
+			});
+		}
+
+		function gravarConfiguracao(){
+			var strConfiguracao = JSON.stringify(Configuracao);
+			$.ajax({
+				url: "../consoleapi/gravarConfiguracao",
+				method: "POST",
+				dataType: "JSON",
+				processData: false,
+				contentType: "application/json; charset=utf-8",
+				data: strConfiguracao,
+				success: function (strResposta) {
+					if (strResposta==null)
+						alert("ERRO: sem comunicação com o servidor.");
+					else if (strResposta!='SUCESSO')
+						alert("ERRO: ao gravar");
+					loadingGeralEsconder();
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					loadingGeralEsconder();
+				}
+
+			});
+		}
+
+		function testeBackend(){
+			$.ajax({
+				url: "../consoleapi/teste",
+				type: "GET",
+				data: {},
+				//dataType: "xml",
+				//dataType: "json",
+				dataType: "text",
+				success: function (ret) {
+					if (ret==null)
+						return;
+					//
+					console.log(ret);
+					var retStr = ret;
+					//
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					loadingGeralEsconder();
+				}
+				
+			});
+		}
+
+
+		function listarHistoricoMock(prmDataInicio, prmDataFim){
+			$.ajax({
+				url: "../consoleapi/listarHistorico?dataInicio="+prmDataInicio+"&dataFim="+prmDataFim,
+				type: "GET",
+				data: {},
+				//dataType: "xml",
+				//dataType: "json",
+				dataType: "text",
+				success: function (ret) {
+					if (ret==null)
+						return;
+					//
+					var retStr = ret;
+					var elmgridHistoricoMock = document.getElementById("gridHistoricoMock");
+					var retHistorico = JSON.parse(ret);
+					const parser = new DOMParser();
+					var conteudo = "";
+					for (var idx=0; idx<retHistorico.length; idx++){
+						//console.log(retHistorico[idx]);
+						if (retHistorico[idx].modalidade=="M"){
+							conteudo = conteudo + "<tr>"+
+										"<td>"+retHistorico[idx].idHistorico+"</td>"+
+										"<td>"+retHistorico[idx].deRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraResposta+"</td>"+
+										"</tr>";
+						}
+									
+					}
+					elmgridHistoricoMock.innerHTML = conteudo;
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+				}
+				
+			});
+		}
+
+		function listarHistoricoBacen(prmDataInicio, prmDataFim){
+			$.ajax({
+				url: "../consoleapi/listarHistorico?dataInicio="+prmDataInicio+"&dataFim="+prmDataFim,
+				type: "GET",
+				data: {},
+				//dataType: "xml",
+				//dataType: "json",
+				dataType: "text",
+				success: function (ret) {
+					if (ret==null)
+						return;
+					//
+					var retStr = ret;
+					var elmgridHistoricoBacen = document.getElementById("gridHistoricoBacen");
+					var retHistorico = JSON.parse(ret);
+					const parser = new DOMParser();
+					var conteudo = "";
+					for (var idx=0; idx<retHistorico.length; idx++){
+						//console.log(retHistorico[idx]);
+						if (retHistorico[idx].modalidade=="B"){
+							conteudo = conteudo + "<tr>"+
+										"<td>"+retHistorico[idx].idHistorico+"</td>"+
+										"<td>"+retHistorico[idx].deRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraResposta+"</td>"+
+										"</tr>";
+						}
+									
+					}
+					elmgridHistoricoBacen.innerHTML = conteudo;
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+				}
+				
+			});
+		}
+
+
+		function listarHistoricoSimulador(prmDataInicio, prmDataFim){
+			$.ajax({
+				url: "../consoleapi/listarHistorico?dataInicio="+prmDataInicio+"&dataFim="+prmDataFim,
+				type: "GET",
+				data: {},
+				//dataType: "xml",
+				//dataType: "json",
+				dataType: "text",
+				success: function (ret) {
+					if (ret==null)
+						return;
+					//
+					var retStr = ret;
+					var elmgridHistoricoSimulador = document.getElementById("gridHistoricoSimulador");
+					var retHistorico = JSON.parse(ret);
+					const parser = new DOMParser();
+					var conteudo = "";
+					for (var idx=0; idx<retHistorico.length; idx++){
+						//console.log(retHistorico[idx]);
+						if (retHistorico[idx].modalidade=="S"){
+							conteudo = conteudo + "<tr>"+
+										"<td>"+retHistorico[idx].idHistorico+"</td>"+
+										"<td>"+retHistorico[idx].deRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraRequisicao+"</td>"+
+										"<td>"+retHistorico[idx].datahoraResposta+"</td>"+
+										"</tr>";
+						}
+									
+					}
+					elmgridHistoricoSimulador.innerHTML = conteudo;
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+				}
+				
+			});
+		}
+
+		
+	</script>
+
+</body>
+</html>
+
