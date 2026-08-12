@@ -51,7 +51,7 @@
 **5. Scripts de banco se houver:**
 *Diagrama de dados implementado em SQLite:*
 ![DiagramaDados](_diagramaTabelas.png)
-Obs: só possui tipos básicos e primitivos devido às limitações do SQLite.
+> Obs: só possui tipos básicos e primitivos devido às limitações do SQLite.
 
 *Scripts:*
 **tbl0001_Paciente definition**
