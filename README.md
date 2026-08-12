@@ -39,9 +39,10 @@
 *SWAGGER*
 
 **4. Readme com instruções de setup e execução:**
-*Neste mesmo.*
-*Para executar a aplicação: _executar.bat*
-*Edite o JAVA_HOME para um java-jdk de versão 21.*
+- Para executar a aplicação: _executar.bat
+- Edite o JAVA_HOME para um java-jdk de versão 21.
+> ATENÇÃO: apontar a variável BD_URL que está comentada em _executar.bat para onde o arquivo SQLite estiver ou alterar no application.properties
+
 
 **5. Scripts de banco se houver:**
 *Diagrama de dados implementado em SQLite:*
