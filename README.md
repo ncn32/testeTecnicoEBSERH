@@ -84,3 +84,69 @@ CREATE TABLE tbl0002_historico (
 - Aplicação está em JAVA-QUARKUS e configurada para o DOCKER;
 - Template já testado em escalabilidade horizontal de 4 PODs com 2 núcleos + 256MB Ram;
 - A média de transações por segundo foram de 4.000/seg de consumidores.
+- Em cada ação realizada no ENDPOINT, haverá um registro na tabela tbl0002_historico para **TRILHA DE AUDITORIA**;
+- **Para a segurança**, foram adicionados parâmetros no application.properties de integração com o SSO (ex: KeyCloak):
+```yaml
+# Configuracao usada apenas nos testes (@QuarkusTest).
+# Define valores para as variaveis que em producao vem do ambiente,
+# evitando falha de expansao de ${...} durante o boot dos testes.
+MODO_MOCK=false
+EBSERH_PACIENTES_TESTE=true
+
+# Configuração de banco de dados
+BD_URL=jdbc:sqlite:target/test-pacientes.sqlite
+BD_USUARIO=
+BD_SENHA=
+BD_SIMULTANEO=3
+
+# Configuração de segurança KeyCloak
+OIDC_AUTH_SERVER_URL=https://host-keycloak/auth/realms/ebserh
+OIDC_CLIENT_ID=pacientes-api
+OIDC_SECRET=aaaaabbbbccccc
+OIDC_SWAGGER_CLIENT_ID=pacientes-swagger
+# Desabilita o OIDC nos testes para o @QuarkusTest subir sem um Keycloak real.
+quarkus.oidc.enabled=false
+
+quarkus.log.category."io.quarkus".level=INFO
+
+```
+Já no código da Controller, está comentado para realização dos testes desejados:
+```java
+import javax.annotation.security.RolesAllowed;
+import io.quarkus.security.Authenticated;
+
+@Path("/")
+@SecuritySchemes( value = {
+	@SecurityScheme(
+			securitySchemeName = "apiKey", 
+			type = SecuritySchemeType.APIKEY, 
+			in = SecuritySchemeIn.HEADER, 
+			apiKeyName = "X-API-KEY"				
+			),
+	@SecurityScheme(
+			securitySchemeName = "access_token_sso", 
+			type = SecuritySchemeType.HTTP, 
+			scheme = "bearer", 
+			bearerFormat = "jwt"
+			)		
+	}
+)
+
+@Tag(name = "EBSERH Pacientes")
+@ApplicationScoped
+@Authenticated
+public class PacientesController {
+
+
+```
+E para cada endpoint, as roles de perfil de usuário:
+```java
+@RolesAllowed("pacientes-leitura")
+@GET
+@Path("/api/v1/pacientes/{id}")
+...
+
+@RolesAllowed("pacientes-escrita")
+@POST
+@Path("/api/v1/pacientes")
+```

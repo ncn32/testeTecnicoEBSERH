@@ -44,8 +44,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.gov.ebserh.pacientes.dto.HistoricoDTO;
 import br.gov.ebserh.pacientes.dto.PacienteDTO;
 import br.gov.ebserh.pacientes.service.PacientesService;
-
-
+//import javax.annotation.security.RolesAllowed;
+//import io.quarkus.security.Authenticated;
 
 @Path("/")
 
@@ -129,6 +129,7 @@ public class PacientesController {
 	
 	// ---------------------------------- CRUD PACIENTES ------------------------------------------
 
+	//@RolesAllowed("pacientes-leitura")
 	@GET
 	@Path("/api/v1/pacientes")
 	@Consumes(value = MediaType.APPLICATION_JSON)
@@ -141,6 +142,7 @@ public class PacientesController {
 		return Response.status(200).entity(lstPacientes).build();
 	}
 
+	//@RolesAllowed("pacientes-leitura")
 	@GET
 	@Path("/api/v1/pacientes/{id}")
 	@Consumes(value = MediaType.APPLICATION_JSON)
@@ -155,43 +157,94 @@ public class PacientesController {
 		return Response.status(200).entity(paciente).build();
 	}
 
+	//@RolesAllowed("pacientes-escrita")
 	@POST
 	@Path("/api/v1/pacientes")
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Operation(summary = "Cadastra um novo paciente", description = "")
 	public Response inserirPaciente(PacienteDTO paciente) {
+		ObjectMapper mapper = new ObjectMapper();
+		HistoricoDTO historico = new HistoricoDTO();
 		log.info("### [INICIO] EBSERH PACIENTES inserirPaciente() ###");
 		boolean ret = pacientesService.inserir(paciente);
+		//
+		try {
+			historico.setRequisicao("POST");
+			historico.setDeRequisicao(mapper.writeValueAsString(paciente));
+			historico.setUsuario("jose.teste");
+			historico.setOrigem("localhost");
+			if (ret)
+				historico.setResposta("SUCESSO");
+			else
+				historico.setResposta("ERRO");
+			pacientesService.inserirHistorico(historico);
+		} catch (Exception e) {
+		}
+		//
 		log.info("### [FIM   ] EBSERH PACIENTES inserirPaciente() ###");
+
 		if (ret)
 			return Response.status(Status.CREATED).entity("SUCESSO").build();
 		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
 	}
 
+	//@RolesAllowed("pacientes-escrita")
 	@PUT
 	@Path("/api/v1/pacientes/{id}")
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Operation(summary = "Atualiza um paciente existente", description = "")
 	public Response atualizarPaciente(@PathParam("id") long id, PacienteDTO paciente) {
+		ObjectMapper mapper = new ObjectMapper();
+		HistoricoDTO historico = new HistoricoDTO();
 		log.info("### [INICIO] EBSERH PACIENTES atualizarPaciente(" + id + ") ###");
 		paciente.setId(id);
 		boolean ret = pacientesService.atualizar(paciente);
+		try {
+			historico.setRequisicao("PUT");
+			historico.setDeRequisicao(mapper.writeValueAsString(paciente));
+			historico.setUsuario("jose.teste");
+			historico.setOrigem("localhost");
+			if (ret)
+				historico.setResposta("SUCESSO");
+			else
+				historico.setResposta("ERRO");
+			pacientesService.inserirHistorico(historico);
+		} catch (Exception e) {
+		}
+		//
 		log.info("### [FIM   ] EBSERH PACIENTES atualizarPaciente() ###");
 		if (ret)
 			return Response.status(200).entity("SUCESSO").build();
 		return Response.status(Status.BAD_REQUEST).entity("ERRO").build();
 	}
 
+	//@RolesAllowed("pacientes-escrita")
 	@DELETE
 	@Path("/api/v1/pacientes/{id}")
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Operation(summary = "Exclui um paciente pelo id", description = "")
 	public Response excluirPaciente(@PathParam("id") long id) {
+		ObjectMapper mapper = new ObjectMapper();
+		HistoricoDTO historico = new HistoricoDTO();
+		PacienteDTO paciente = pacientesService.buscarPorId(id);
 		log.info("### [INICIO] EBSERH PACIENTES excluirPaciente(" + id + ") ###");
 		boolean ret = pacientesService.excluir(id);
+		try {
+			historico.setRequisicao("DELETE");
+			historico.setDeRequisicao(mapper.writeValueAsString(paciente));
+			historico.setUsuario("jose.teste");
+			historico.setOrigem("localhost");
+			if (ret)
+				historico.setResposta("SUCESSO");
+			else
+				historico.setResposta("ERRO");
+			pacientesService.inserirHistorico(historico);
+		} catch (Exception e) {
+		}
+		//
 		log.info("### [FIM   ] EBSERH PACIENTES excluirPaciente() ###");
 		if (ret)
 			return Response.status(200).entity("SUCESSO").build();
@@ -200,6 +253,7 @@ public class PacientesController {
 
 	// ---------------------------------- HISTORICO ------------------------------------------
 
+	//@RolesAllowed("historico-leitura")
 	@GET
 	@Path("/api/v1/historico")
 	@Consumes(value = MediaType.APPLICATION_JSON)
@@ -212,6 +266,7 @@ public class PacientesController {
 		return Response.status(200).entity(lstHistorico).build();
 	}
 
+	//@RolesAllowed("historico-escrita")
 	@POST
 	@Path("/api/v1/historico")
 	@Consumes(value = MediaType.APPLICATION_JSON)
