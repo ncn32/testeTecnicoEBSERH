@@ -85,8 +85,10 @@ CREATE TABLE tbl0002_historico (
 
 **6. Considerações sobre escalabilidade, segurança e manutenção:**
 - Aplicação está em JAVA-QUARKUS e configurada para o DOCKER;
-- Template já testado em escalabilidade horizontal de 4 PODs com 2 núcleos + 256MB Ram;
-- A média de transações por segundo foram de 4.000/seg de consumidores.
+- Template já testado em escalabilidade horizontal de 4 PODs com 2 núcleos + 256MB RAM;
+- Feito testes de carga e performance com JMETER e servidor otimizado, chegado a aproximandos 150mil conexões simultâneas;
+- A média de transações por segundo foram de 4.000/seg de consumidores na produção:
+![RelatorioPerformance](_RelatorioPerformance.png)
 - Em cada ação realizada no ENDPOINT, haverá um registro na tabela tbl0002_historico para **TRILHA DE AUDITORIA**;
 - **Para a segurança**, foram adicionados parâmetros no application.properties de integração com o SSO (ex: KeyCloak):
 ```yaml
@@ -113,7 +115,7 @@ quarkus.oidc.enabled=false
 quarkus.log.category."io.quarkus".level=INFO
 
 ```
-Já no código da Controller, está comentado para realização dos testes desejados:
+Já no código da Controller, está comentado para realização dos testes desejados e assim não requer autenticação:
 ```java
 import javax.annotation.security.RolesAllowed;
 import io.quarkus.security.Authenticated;
