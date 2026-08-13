@@ -20,11 +20,11 @@
 **Requisitos:**
 > Entregar tudo o que for documentação ou código-fonte em um repositório público no GitHub, as respostas podem ser no **README.md**.
 
-.
-.
-.
-.
+- 
+- 
+- 
 
+---
 
 ### - CONSTRUÇÃO -
 *Implementado em QUARKUS e compatível com JAVA-21*
